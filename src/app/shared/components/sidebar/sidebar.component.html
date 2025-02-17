@@ -4,6 +4,7 @@
       type="checkbox"
       (change)="isShowSidebar = !isShowSidebar"
       id="checkbox"
+      #checkbox
     />
     <svg viewBox="0 0 32 32">
       <path
@@ -17,7 +18,7 @@
 
 <div class="sidebar" [class.show-sidebar]="isShowSidebar">
   <div class="sidebar__items">
-    <div class="sidebar__items-item">
+    <a class="sidebar__items-item" (click)="hideSidebar()" routerLinkActive="active" [routerLink]="['/dashboard']">
       <div class="sidebar__items-item-icon">
         <svg
           width="800px"
@@ -41,9 +42,9 @@
         </svg>
       </div>
       <p class="sidebar__items-item-title">Dashboard</p>
-    </div>
+    </a>
 
-    <div class="sidebar__items-item">
+    <a class="sidebar__items-item" (click)="hideSidebar()" routerLinkActive="active" [routerLink]="['/transactions']">
       <div class="sidebar__items-item-icon">
         <svg
           width="800px"
@@ -62,9 +63,9 @@
         </svg>
       </div>
       <p class="sidebar__items-item-title">Transactions</p>
-    </div>
+    </a>
 
-    <div class="sidebar__items-item">
+    <a class="sidebar__items-item" (click)="hideSidebar()" routerLinkActive="active" [routerLink]="['/wallet']">
       <div class="sidebar__items-item-icon">
         <svg width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="stroke">
           <path d="M6 8H10" stroke="#1C274C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -74,9 +75,9 @@
           </svg>
       </div>
       <p class="sidebar__items-item-title">Wallet</p>
-    </div>
+    </a>
 
-    <div class="sidebar__items-item">
+    <a class="sidebar__items-item" (click)="hideSidebar()">
       <div class="sidebar__items-item-icon">
         <svg
           fill="#000000"
@@ -145,9 +146,9 @@
         </svg>
       </div>
       <p class="sidebar__items-item-title">Reports</p>
-    </div>
+    </a>
 
-    <div class="sidebar__items-item">
+    <a class="sidebar__items-item" (click)="hideSidebar()" routerLinkActive="active" [routerLink]="['/expense-types']">
       <div class="sidebar__items-item-icon">
         <svg
           width="800px"
@@ -164,9 +165,9 @@
         </svg>
       </div>
       <p class="sidebar__items-item-title">Expense Types</p>
-    </div>
+    </a>
 
-    <div class="sidebar__items-item">
+    <a class="sidebar__items-item" (click)="hideSidebar()" [routerLink]="['/login']">
       <div class="sidebar__items-item-icon">
         <svg width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="stroke">
             <path d="M17.4399 14.62L19.9999 12.06L17.4399 9.5" stroke="#292D32" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
@@ -175,6 +176,6 @@
         </svg>
       </div>
       <p class="sidebar__items-item-title">Logout</p>
-    </div>
+    </a>
   </div>
 </div>

@@ -1,12 +1,4 @@
 .transactions {
-    .subtitle {
-        transition: all 0.1s ease-in;
-        &:hover {
-            color: #29756F;
-            transition: all 0.1s ease-in;
-        }
-    }
-
     &__card {
         @apply flex items-center gap-4 px-2 py-3 bg-gray-50 rounded-2xl;
 

@@ -1,56 +1,42 @@
-.transactions {
-    .subtitle {
-        transition: all 0.1s ease-in;
-        &:hover {
-            color: #29756F;
-            transition: all 0.1s ease-in;
-        }
-    }
-
+.expense {
     &__card {
         @apply flex items-center gap-4 px-2 py-3 bg-gray-50 rounded-2xl;
-
+    
         &:not(:last-child) {
             margin-bottom: 8px;
         }
-
+    
         &-image {
             @apply flex justify-center items-center;
             background-color: #F0F6F5;
             border-radius: 100px;
             width: 50px;
             height: 50px;
-
+    
             img {
                 width: 24px;
                 height: 24px;
             }
         }
-
+    
         &-info {
             .name {
                 @apply font-semibold;
                 font-size: 16px;
                 color: #000;
             }
-
-            .date {
-                font-size: 13px;
-                color: #666666;
-            }
         }
+    }
+}
 
-        &-money {
-            @apply ml-auto font-semibold;
-            font-size: 18px;
+.delete-icon {
+    @apply flex justify-center items-center rounded-full cursor-pointer;
+    background-color: rgba(255,61,0, 0.10);
+    width: 34px;
+    height: 34px;
 
-            &.green {
-                color: #25A969;
-            }
-
-            &.red {
-                color: #F95B51;
-            }
-        }
+    img {
+        width: 24px;
+        height: 24px;
     }
 }

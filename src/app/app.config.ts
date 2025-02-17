@@ -9,6 +9,10 @@ import { provideHttpClient, withFetch } from '@angular/common/http';
 import { environment } from './environments/environments';
 import { routes } from './app.routes';
 
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { providePrimeNG } from 'primeng/config';
+import Aura from '@primeng/themes/aura';
+
 export const appConfig: ApplicationConfig = {
   providers: [
     { provide: FIREBASE_OPTIONS, useValue: environment.firebase }, // ✅ Provide Firebase options
@@ -17,6 +21,15 @@ export const appConfig: ApplicationConfig = {
     provideFirestore(() => getFirestore()),
     provideHttpClient(withFetch()),
     provideZoneChangeDetection({ eventCoalescing: true }),
-    provideRouter(routes)
+    provideRouter(routes),
+    provideAnimationsAsync(),
+    providePrimeNG({
+        theme: {
+            preset: Aura,
+            options: {
+              darkModeSelector: false
+            }
+        }
+    })
   ]
 };

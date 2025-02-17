@@ -1,0 +1,33 @@
+<div class="section dashboard">
+    <div class="content-padding">
+        <p class="section-title">Add Expense</p>
+    </div>
+</div>
+
+<div class="section-content-v2">
+    <form class="form" [formGroup]="form">    
+        <div class="form__group">
+            <label for="name">Name<span class="text-red-500">*</span></label>
+            <input type="text" id="name" placeholder="Name" formControlName="name">
+        </div>
+    
+        <div class="form__group">
+            <label for="last_name">Type<span class="text-red-500">*</span></label>
+            <p-select [options]="expenseTypes" formControlName="type" optionLabel="name" placeholder="Type" class="w-full" />
+        </div>
+    
+        <div class="form__group">
+            <label for="amount">Amount<span class="text-red-500">*</span></label>
+            <input type="number" id="amount" placeholder="Amount" formControlName="amount">
+        </div>
+
+        <div class="form__group">
+            <label for="amount">Date<span class="text-red-500">*</span></label>
+            <p-datepicker formControlName="date" dateFormat="dd/mm/yy" placeholder="Date"/>
+        </div>
+    </form>
+</div>
+
+<button class="form__btn" [disabled]="!form.valid">
+    Submit
+</button>

@@ -1,12 +1,19 @@
-import { Component, Host, HostListener, OnInit } from '@angular/core';
+import { Component, ElementRef, Host, HostListener, OnInit, ViewChild } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-sidebar',
-  imports: [],
+  imports: [
+    RouterModule,
+    FormsModule
+  ],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss'
 })
 export class SidebarComponent implements OnInit {
+  @ViewChild('checkbox') checkboxRef!: ElementRef<HTMLInputElement>;
+
   isShowSidebar = false;
   constructor() { }
 
@@ -36,6 +43,13 @@ export class SidebarComponent implements OnInit {
       sidebar.style.left = `${leftPosition}px`;
       sidebar.style.position = "fixed"; // Fix position relative to viewport
       sidebar.style.top = "0"; // Keep it at the top (adjust as needed)
+    }
+  }
+
+  hideSidebar() {
+    this.isShowSidebar = false;
+    if (this.checkboxRef) {
+      this.checkboxRef.nativeElement.checked = false;
     }
   }
 }

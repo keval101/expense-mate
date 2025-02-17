@@ -5,6 +5,9 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+    --p-emerald-500: $primary;
+}
 
 * {
     margin: 0;
@@ -40,10 +43,117 @@ body {
     background-repeat: no-repeat;
 }
 
+.section-title {
+    @apply text-white font-semibold text-center;
+    font-size: 22px;
+    padding-top: 84px
+}
+
+.section-content {
+    background-color: #fff;
+    border-radius: 20px;
+    margin-top: -120px;
+    padding: 20px;
+    min-height: 200px
+}
+
+.section-content-v2 {
+    background-color: #fff;
+    border-radius: 20px;
+    padding: 20px;
+    min-height: 200px;
+    width: calc(100% - 48px);
+    margin: 0 auto;
+    margin-top: -120px !important;
+    box-shadow: 0px 2px 24px rgba(0, 0, 0, 0.08);
+}
+
 .title {
     @apply font-semibold;
     font-size: 18px;
     margin-bottom: 20px;
+}
+
+.subtitle {
+    font-size: 14px;
+    color: #666666;
+}
+
+
+.form {
+    &__group {
+        @apply flex flex-col mb-5;
+
+        label {
+            @apply uppercase;
+            font-size: 12px;
+            font-weight: 500;
+            color: #666666;
+            margin-bottom: 6px
+        }
+
+        input {
+            @apply outline-none rounded-lg border border-gray-300 px-3 w-full;
+            border-width: 1.4px;
+            height: 40px;
+            font-size: 14px;
+
+            &:focus {
+                outline: none;
+                border-color: $primary;
+            }
+
+            /* Hide arrows for Chrome, Safari, Edge, and Opera */
+            &[type="number"]::-webkit-inner-spin-button,
+            &[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+            }
+
+            /* Hide arrows for Firefox */
+            &[type="number"] {
+            -moz-appearance: textfield;
+            }
+        }
+
+        .p-select:not(.p-disabled).p-focus {
+            border-color: $primary ;
+        }
+        
+        .p-select-option.p-select-option-selected {
+            background: $primary ;
+            color: #fff 
+        }
+
+        .p-select-label {
+            @apply flex items-center;
+            font-size: 14px;
+            height: 40px;
+        }
+
+        .p-datepicker {
+            width: 100%;
+        }
+    }
+
+    &__btn {
+        @apply rounded-full text-white mx-8 text-nowrap flex justify-center items-center;
+        font-size: 18px;
+        width: calc(100% - 4rem);
+        padding: 13px 130px;
+        margin-top: 26px;
+        height: 52px;
+        background: linear-gradient(185deg, #63B5AE 0%, #438883 100%);
+        box-shadow: 0px 1px 20px #3e7c789c;
+        transition: all 0.3s ease-in-out;
+
+        &[disabled] {
+            background: linear-gradient(337deg, #838383c7 0%, #d7d7d7a1 100%);
+            box-shadow: 0px 1px 20px rgb(196 196 196 / 80%);
+            cursor: not-allowed;
+            transition: all 0.3s ease-in-out;
+        }
+    }
 }
 
 ::-webkit-scrollbar {

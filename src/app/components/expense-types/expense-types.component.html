@@ -1,0 +1,28 @@
+<div class="section dashboard">
+    <div class="content-padding">
+        <p class="section-title">Expense Types</p>
+    </div>
+</div>
+
+<div class="section-content">
+    @if(isLoading) {
+        <app-spinner></app-spinner>
+    } @else {
+        @for(item of expenseTypes; track item) {
+            <div class="expense__card">
+                <div class="expense__card-image">
+                    <img [src]="getIcon(item?.type)" alt="">
+                </div>
+                <div class="expense__card-info">
+                    <p class="name">{{item.name}}</p>
+                </div>
+                @if(item.delete) {
+                    <div class="ml-auto delete-icon">
+                        <img src="/icons/delete.png" alt="">
+                    </div>
+                }
+                <!-- <p class="texpense__card-money green">850.00</p> -->
+            </div>
+        }
+    }
+</div>

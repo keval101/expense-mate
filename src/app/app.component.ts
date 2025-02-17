@@ -39,8 +39,9 @@ export class AppComponent implements OnInit{
   ngOnInit(): void {
     setTimeout(() => {
       console.log(this.router.url)
-      this.needSidebar = !this.routes.includes(this.router.url);
-    }, 100);
+      const url = this.router.url.replaceAll('/', '');
+      this.needSidebar = !this.routes.includes(url);
+    }, 500);
   }
 
   onActivate(event: any) {
