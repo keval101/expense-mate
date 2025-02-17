@@ -1,0 +1,119 @@
+.sidebar {
+    position: fixed;
+    width: 350px;
+    top: 0;
+    z-index: 99;
+    background-color: #fff;
+    height: 100vh;
+    border-radius: 0 20px 20px 0;
+    padding: 24px;
+    padding-top: 100px;
+    opacity: 0;
+    transform: translateX(-450px);
+    transition: all 0.3s ease-in-out;
+
+    &.show-sidebar {
+        transform: translateX(0);
+        opacity: 1;
+        transition: all 0.3s ease-in-out;
+    }
+
+    img {
+        width: 20px;
+        height: 20px;
+    }
+
+    &__header {
+        position: absolute;
+        top: 40px;
+        right: 20px;
+        z-index: 100;
+
+    }
+
+    &__items {
+        &-item {
+            @apply flex items-center gap-2 px-3 py-4 rounded-full mb-4 cursor-pointer;
+            font-size: 16px;
+            transition: all 0.3s ease-in-out;
+            
+            &:not(:last-child) {
+                margin-bottom: 4px;
+            }
+
+            &-icon {
+                @apply flex items-center justify-center;
+                min-width: 24px;
+                min-height: 24px;
+                border-radius: 100%;
+                // background-color: rgba(255, 255, 255, 0.15);
+
+                svg {
+                    height: 18px;
+                    width: 16px;
+                    transition: all 0.3s ease-in-out;
+                }
+            }
+            
+            &:hover {
+                background-color: #2F7E79;
+                color: #fff;
+                transition: all 0.3s ease-in-out;
+
+                svg.stroke path {
+                    stroke: #fff;
+                    transition: all 0.3s ease-in-out;
+                }
+                svg.path path{
+                    fill: #fff;
+                    transition: all 0.3s ease-in-out;
+                }
+                svg.svg-fill{
+                    fill: #fff;
+                    transition: all 0.3s ease-in-out;
+                }
+            }
+        }
+    }
+}
+    .hamburger {
+    cursor: pointer;
+  }
+  
+  .hamburger input {
+    display: none;
+  }
+  
+  .hamburger svg {
+    /* The size of the SVG defines the overall size */
+    height: 3em;
+    /* Define the transition for transforming the SVG */
+    transition: transform 600ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .line {
+    fill: none;
+    // stroke: #2F7E79;
+    stroke: #fff;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 3;
+    /* Define the transition for transforming the Stroke */
+    transition:
+      stroke-dasharray 600ms cubic-bezier(0.4, 0, 0.2, 1),
+      stroke-dashoffset 600ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .line-top-bottom {
+    stroke-dasharray: 12 63;
+  }
+  
+  .hamburger input:checked + svg {
+    transform: rotate(-45deg);
+  }
+  
+  .hamburger input:checked + svg .line-top-bottom {
+    stroke-dasharray: 20 300;
+    stroke-dashoffset: -32.42;
+  }
+  

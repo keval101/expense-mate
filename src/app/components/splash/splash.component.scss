@@ -1,0 +1,8 @@
+.splash {
+    @apply flex justify-center items-center h-screen;
+    background: linear-gradient(185deg, #63B5AE 0%, #438883 100%);
+    
+    p {
+        @apply text-white text-3xl font-semibold;
+    }
+}

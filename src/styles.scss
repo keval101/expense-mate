@@ -1,1 +1,61 @@
-/* You can add global styles to this file, and also import other style files */
+@use './../public/styles/variable' as *;
+@import url('https://fonts.googleapis.com/css2?family=Mona+Sans:ital,wght@0,200..900;1,200..900&family=Quicksand:wght@300..700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-size: 14px;
+    background-color: rgba(0, 0, 0, 0.03);
+    font-family: 'Mona Sans', sans-serif;
+    overflow-x: hidden;
+}
+
+.mobile-container {
+    max-width: 450px;
+    background-color: #fff;
+    margin: 0 auto;
+    height: 100vh;
+    overflow-y: auto;
+    // overflow-x: hidden;
+}
+
+.content-padding {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.section {
+    background-image: url('./../public/images/section.svg');
+    min-height: 288px;
+    background-position: bottom;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.title {
+    @apply font-semibold;
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+::-webkit-scrollbar {
+    width: 4px;
+}
+
+::-webkit-scrollbar-track {
+    background: #43888341;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #29756F;
+    border-radius: 10px;
+}

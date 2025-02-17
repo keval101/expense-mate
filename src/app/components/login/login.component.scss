@@ -1,0 +1,89 @@
+@use '../../../../public/styles/variable' as *;
+
+.login {
+    padding-bottom: 20px;
+    &__header {
+        @apply relative;
+        background-size: cover;
+        padding-top: 80px;
+        background-image: url('./../../../../public/images/man-bg.svg');
+        background-repeat: no-repeat;
+        background-position: bottom;
+        transition: all 0.3s ease-in-out;
+
+        &.hide {
+            transform: translateY(-100%);
+            position: absolute;
+            top: 0;
+            transition: all 0.3s ease-in-out;
+        }
+    }
+
+    &__title {
+        @apply font-bold text-center capitalize mt-8;
+        font-size: 36px;
+        color: $primary;
+        transition: all 0.3s ease-in-out;
+    }
+
+    &__btn {
+        @apply rounded-full text-white mx-8 text-nowrap flex justify-center items-center;
+        font-size: 18px;
+        width: calc(100% - 4rem);
+        padding: 13px 130px;
+        margin-top: 26px;
+        height: 52px;
+        background: linear-gradient(185deg, #63B5AE 0%, #438883 100%);
+        box-shadow: 0px 1px 20px #3e7c789c;
+        transition: all 0.3s ease-in-out;
+
+        &[disabled] {
+            background: linear-gradient(337deg, #838383c7 0%, #d7d7d7a1 100%);
+            box-shadow: 0px 1px 20px rgb(196 196 196 / 80%);
+            cursor: not-allowed;
+            transition: all 0.3s ease-in-out;
+        }
+    }
+
+    &__text {
+        @apply text-center text-sm mt-4;
+        transition: all 0.3s ease-in-out;
+        a {
+            color: $primary;
+        }
+    }
+}
+
+.form {
+    &__group {
+        @apply flex flex-col gap-2 mb-4;
+
+        label {
+            font-size: 12px;
+        }
+
+        input {
+            @apply outline-none rounded-lg border border-gray-300 px-2 w-full;
+            border-width: 1.4px;
+            height: 40px;
+            font-size: 12px;
+
+            &:focus {
+                outline: none;
+                border-color: $primary;
+            }
+
+            /* Hide arrows for Chrome, Safari, Edge, and Opera */
+            &[type="number"]::-webkit-inner-spin-button,
+            &[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+            }
+
+            /* Hide arrows for Firefox */
+            &[type="number"] {
+            -moz-appearance: textfield;
+            }
+        }
+    }
+}

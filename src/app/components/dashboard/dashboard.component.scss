@@ -1,0 +1,70 @@
+.dashboard {
+    @apply relative;
+    &__greeting {
+        padding-top: 74px;
+        .greeting {
+            font-size: 14px;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+
+        .username {
+            @apply font-semibold;
+            font-size: 20px;
+            color: #fff;
+        }
+    }
+
+    &__card {
+        position: absolute;
+        bottom: -68px;
+        background-color: #2F7E79;
+        box-shadow: 0px 1px 20px #3e7c789c;
+        width: calc(100% - 40px);
+        left: 20px;
+        padding: 24px 18px;
+        border-radius: 20px;
+        color: #fff;
+
+        .total {
+            @apply font-semibold;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .balance {
+            @apply font-semibold;
+            font-size: 30px;
+            line-height: normal;
+        }
+
+        .expense,
+        .income {
+            &__title {
+                color: #D0E5E4;
+                font-size: 16px;
+                margin-bottom: 4px
+            }
+            &__img {
+                @apply flex items-center justify-center;
+                min-width: 24px;
+                min-height: 24px;
+                border-radius: 100%;
+                background-color: rgba(255, 255, 255, 0.15);
+
+                img {
+                    height: 16px
+                }
+            }
+            &__money {
+                @apply font-semibold;
+                font-size: 20px;
+                color: #fff;
+            }
+        }
+    }
+}
+
+.transactions-container {
+    margin-top: 90px;
+}
