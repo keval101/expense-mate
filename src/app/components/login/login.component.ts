@@ -84,7 +84,11 @@ export class LoginComponent implements OnInit {
         }).catch(error => {
           this.isLoading = false;
           console.log(error.message);
-          this.toastService.displayToast('error', 'Sign In', 'Something went wrong!');
+          let errorMessage = 'Something went wrong!';
+          if(error.message.includes('invalid-credential')) {
+            errorMessage = 'Invalid email or password!'
+          }
+          this.toastService.displayToast('error', 'Sign In', errorMessage);
         });
       } else {
         this.authService.register(this.form.value.email, this.form.value.password).then(async (res: any) => {
