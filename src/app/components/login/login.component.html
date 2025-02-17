@@ -47,7 +47,7 @@
     }
 
     @if(isGetStarted) {
-        <button class="login__btn" [disabled]="!form.valid" (click)="submit()">
+        <button class="form__btn" [disabled]="!form.valid" (click)="submit()">
             @if(isLoading) {
                 <app-spinner></app-spinner>
             } @else {
@@ -55,7 +55,7 @@
             }
         </button>
     } @else {
-        <button class="login__btn" (click)="getStarted()">Get Started</button>
+        <button class="form__btn" (click)="getStarted()">Get Started</button>
     }
     
     @if(isLogin) {
