@@ -69,11 +69,12 @@ export class TransactionsComponent {
       if (mobileContainer && sidebar) {
         const containerRect = mobileContainer.getBoundingClientRect(); // Get position relative to viewport
         const containerWidth = containerRect.width;
-        const sidebarWidth = containerWidth * 0.85; // Sidebar is 85% of mobile-container
+        const sidebarWidth = containerWidth; // Sidebar is 85% of mobile-container
         const leftPosition = containerRect.x; // Calculate actual left position
   
   
         sidebar.style.left = `${leftPosition}px`;
+        sidebar.style.width = `${sidebarWidth}px`;
       }
     }, 0);
   }
