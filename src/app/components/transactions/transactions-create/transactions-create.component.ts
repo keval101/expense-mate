@@ -6,6 +6,8 @@ import { SharedModule } from '../../../shared/shared.module';
 import { SelectModule } from 'primeng/select';
 import { DatePickerModule } from 'primeng/datepicker';
 import { DataService } from '../../../shared/services/data.service';
+import { AuthService } from '../../../shared/services/auth.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-transactions-create',
@@ -25,10 +27,14 @@ export class TransactionsCreateComponent implements OnInit{
   form!: FormGroup;
   expenseTypes: any[] = [];
   isLoading = false;
+  user: any;
+  destroy$ = new Subject<void>();
+  
 
   constructor(
     private fb: FormBuilder,
-    private dataService: DataService
+    private dataService: DataService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -39,16 +45,25 @@ export class TransactionsCreateComponent implements OnInit{
         date: ['', Validators.required]
       })
 
-      this.getExpenseTypes();
+      this.authService.getCurrentUserDetail().then(user => {
+        this.user = user;
+        this.getExpenseTypes(this.user.id);
+      })
+
   }
 
-  getExpenseTypes() {
+  getExpenseTypes(userId: string) {
     this.isLoading = true;
-    this.dataService.getExpenseTypes().subscribe((data) => {
+    this.dataService.getExpenseTypes(userId).pipe(takeUntil(this.destroy$)).subscribe((data) => {
       this.expenseTypes = data;
       this.isLoading = false;
       console.log(this.expenseTypes);
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
 }

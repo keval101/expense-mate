@@ -1,10 +1,11 @@
 <div class="section dashboard">
     <div class="content-padding">
-        <p class="section-title">Transactions</p>
+        <p class="section-title">Expenses</p>
     </div>
 </div>
 
 <div class="section-content transactions">
+    <button class="add-btn" [routerLink]="['/transactions/add']">Add Expense</button>
     <!-- @if(isLoading) {
         <app-spinner></app-spinner>
     } @else {

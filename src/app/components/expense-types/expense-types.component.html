@@ -5,6 +5,7 @@
 </div>
 
 <div class="section-content">
+    <button class="add-btn" [routerLink]="['/expense-types/add']">Add Expense Type</button>
     @if(isLoading) {
         <app-spinner></app-spinner>
     } @else {
@@ -17,7 +18,7 @@
                     <p class="name">{{item.name}}</p>
                 </div>
                 @if(item.delete) {
-                    <div class="ml-auto delete-icon">
+                    <div class="ml-auto delete-icon" (click)="deleteExpenseType(item.id)">
                         <img src="/icons/delete.png" alt="">
                     </div>
                 }

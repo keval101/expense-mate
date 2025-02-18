@@ -1,6 +1,7 @@
+import { Location } from '@angular/common';
 import { Component, ElementRef, Host, HostListener, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-sidebar',
@@ -15,7 +16,12 @@ export class SidebarComponent implements OnInit {
   @ViewChild('checkbox') checkboxRef!: ElementRef<HTMLInputElement>;
 
   isShowSidebar = false;
-  constructor() { }
+  isDashboard = false;
+
+  constructor(
+    private location: Location,
+    private router: Router
+  ) { }
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
@@ -25,6 +31,11 @@ export class SidebarComponent implements OnInit {
 
   ngOnInit(): void {
       this.setSidebarPosition();
+      this.isDashboard = this.router.url === '/dashboard';
+
+      this.router.events.subscribe(event => {
+        this.isDashboard = this.router.url === '/dashboard';
+      })
   }
 
   setSidebarPosition(): void { 
@@ -51,5 +62,9 @@ export class SidebarComponent implements OnInit {
     if (this.checkboxRef) {
       this.checkboxRef.nativeElement.checked = false;
     }
+  }
+
+  goBack() {
+    this.location.back();
   }
 }

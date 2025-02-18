@@ -7,6 +7,7 @@ import { ExpenseTypesComponent } from './components/expense-types/expense-types.
 import { TransactionsComponent } from './components/transactions/transactions.component';
 import { TransactionsCreateComponent } from './components/transactions/transactions-create/transactions-create.component';
 import { WalletComponent } from './components/wallet/wallet.component';
+import { ExpenseTypesCreateComponent } from './components/expense-types/expense-types-create/expense-types-create.component';
 
 export const routes: Routes = [
     {
@@ -28,12 +29,17 @@ export const routes: Routes = [
         canActivate: [AuthGuard]
     },
     {
-        path: 'transactions',
+        path: 'expense-types/add',
+        component: ExpenseTypesCreateComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'expenses',
         component: TransactionsComponent,
         canActivate: [AuthGuard],
     },
     {
-        path: 'transactions/add',
+        path: 'expenses/add',
         component: TransactionsCreateComponent,
         canActivate: [AuthGuard]
     },

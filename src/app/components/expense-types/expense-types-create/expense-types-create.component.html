@@ -1,0 +1,18 @@
+<div class="section dashboard">
+    <div class="content-padding">
+        <p class="section-title">Add Expense Type</p>
+    </div>
+</div>
+
+<div class="section-content-v2 !min-h-0">
+    <form class="form" [formGroup]="form">    
+        <div class="form__group">
+            <label for="name">Name<span class="text-red-500">*</span></label>
+            <input type="text" id="name" placeholder="Name" formControlName="name">
+        </div>
+    </form>
+</div>
+
+<button class="form__btn" [disabled]="!form.valid" (click)="saveExpenseType()">
+    Submit
+</button>

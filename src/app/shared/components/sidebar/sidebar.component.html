@@ -14,6 +14,12 @@
       <path class="line" d="M7 16 27 16"></path>
     </svg>
   </label>
+
+  @if(!isDashboard) {
+    <button class="back-btn" (click)="goBack()">
+      <img src="/icons/arrow-left.svg" alt="">
+    </button>
+  }
 </div>
 
 <div class="sidebar" [class.show-sidebar]="isShowSidebar">
@@ -44,7 +50,7 @@
       <p class="sidebar__items-item-title">Dashboard</p>
     </a>
 
-    <a class="sidebar__items-item" (click)="hideSidebar()" routerLinkActive="active" [routerLink]="['/transactions']">
+    <a class="sidebar__items-item" (click)="hideSidebar()" routerLinkActive="active" [routerLink]="['/expenses']">
       <div class="sidebar__items-item-icon">
         <svg
           width="800px"
