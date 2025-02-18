@@ -6,7 +6,7 @@
 
 <div class="section-content wallet">
     <div class="wallet__balanace">
-        <p>Availalbe Balance: <span>{{25000 | currency:'INR'}}</span></p>
+        <p>Availalbe Balance: <span>{{totalIncome | currency:'INR'}}</span></p>
     </div>
 
     <!-- <p class="title">Income history</p> -->
@@ -18,6 +18,8 @@
 
     @for(item of incomes; track item) {
     <div class="wallet__card">
+        <button (click)="setSelectedItem(item)" class="close-btn"><img src="/icons/close-red.svg" alt=""></button>
+
         <div class="wallet__card-image">
             <img src="/icons/money-bag.svg" alt="">
         </div>
@@ -34,3 +36,5 @@
     <p class="text-center">No Incomes Found!</p>
     }
 </div>
+
+<app-delete [name]="selectedItem?.name" (onDelete)="deleteIncome(selectedItem)" (onCancel)="onCancel()"></app-delete>

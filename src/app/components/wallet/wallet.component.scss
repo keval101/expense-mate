@@ -20,7 +20,7 @@
     }
 
     &__card {
-        @apply flex items-center gap-4 px-2 py-3 bg-gray-50 rounded-2xl;
+        @apply flex items-center gap-4 px-2 py-3 bg-gray-50 rounded-2xl relative;
 
         &:not(:last-child) {
             margin-bottom: 8px;
@@ -62,6 +62,17 @@
 
             &.red {
                 color: #F95B51;
+            }
+        }
+
+        .close-btn {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+
+            img {
+                width: 20px;
+                height: 20px;
             }
         }
     }

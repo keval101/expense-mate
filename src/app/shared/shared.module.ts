@@ -7,6 +7,7 @@ import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { environment } from '../environments/environments';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
+import { DeleteComponent } from './components/delete/delete.component';
 
 @NgModule({
   imports: [
@@ -16,12 +17,14 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
     AngularFirestoreModule,
-    SidebarComponent
+    SidebarComponent,
+    DeleteComponent
   ],
   exports: [
     ToastComponent,
     SpinnerComponent,
-    SidebarComponent
+    SidebarComponent,
+    DeleteComponent
   ]
 })
 export class SharedModule { }

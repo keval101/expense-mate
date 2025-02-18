@@ -27,9 +27,15 @@ export class TransactionsComponent {
 
   user: any;
   expenses: any[] = [];
+  allExpenses: any[] = [];
   isLoading = true;
   filter = false;
   filterValue: any = {};
+  totalExpense = 0
+  selectedItem: any = {};
+  isDelete = false;
+  searchValue = '';
+
 
     @HostListener('window:resize', ['$event'])
     onResize(event: any) {
@@ -60,7 +66,6 @@ export class TransactionsComponent {
     setTimeout(() => {      
       const mobileContainer = document.querySelector('.mobile-container') as HTMLElement;
       const sidebar = document.querySelector('.custom-drawer') as HTMLElement;
-      console.log(sidebar, mobileContainer)
       if (mobileContainer && sidebar) {
         const containerRect = mobileContainer.getBoundingClientRect(); // Get position relative to viewport
         const containerWidth = containerRect.width;
@@ -81,27 +86,25 @@ export class TransactionsComponent {
 
   onFilteration(filterValue: any) {
     this.filterValue = filterValue;
-    console.log(this.filterValue)
-    this.expenses = this.expenses.filter(expense => {
+    this.expenses = this.allExpenses.filter(expense => {
       let isValid = true;
 
-      if (filterValue.month) {
-        isValid = isValid && expense.date.includes(filterValue.month);
+      if (filterValue.month.length) {
+        isValid = isValid && filterValue.month.includes(expense.month);
       }
     
-      if (filterValue.type) {
-        isValid = isValid && expense.type.name === filterValue.type;
+      if (filterValue.type.length) {
+        isValid = isValid && filterValue.type.includes(expense.type.type); 
       }
     
       return isValid;
     })
 
-    console.log(filterValue.topSpending, this.expenses);
     if(filterValue.topSpending) {
-      this.expenses = this.expenses.sort((a, b) => (b.amount || 0) - (a.amount || 0));
+      this.expenses = this.allExpenses.sort((a, b) => (b.amount || 0) - (a.amount || 0));
     }
 
-    console.log(this.expenses);
+    this.setTotalExpense();
   }
 
   getExpenses() {
@@ -109,11 +112,39 @@ export class TransactionsComponent {
     this.dataService.getExpenses(this.user.id).subscribe(expenses => {
       this.isLoading = false;
       this.expenses = expenses;
+      this.allExpenses = JSON.parse(JSON.stringify(expenses));
       const month = this.datepipe.transform(new Date(), 'MMM, yyyy')
       this.filterValue = {
         month: [month],
       };
+      if(this.searchValue) {
+        this.onSearch(this.searchValue);
+      }
+      this.setTotalExpense();
     })
+  }
+
+  setTotalExpense() {
+    this.totalExpense = this.expenses?.reduce((sum, item) => sum + (item.amount || 0), 0) || 0;
+  }
+
+  onSearch(value: string) {
+    const search = value;
+    this.searchValue = search;
+    this.expenses = this.allExpenses.filter(expense => {
+      return expense.name.toLowerCase().includes(search.toLowerCase());
+    })
+    this.setTotalExpense();
+  }
+
+  onCancel() {
+    this.selectedItem = {};
+    this.isDelete = false;
+  }
+
+  setSelectedItem(item: any) {
+    this.selectedItem = item;
+    this.isDelete = true;
   }
 
   async deleteExpense(item: any) {

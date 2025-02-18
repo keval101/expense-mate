@@ -83,7 +83,12 @@ export class DataService {
   }
 
   async saveIncome(payload: any) {
-    await this.fireStore.collection('users').doc(payload.user.id).collection('incomes').add(payload);
-    return this.fireStore.collection('incomes').add(payload);
+    const response =  await this.fireStore.collection('users').doc(payload.user.id).collection('incomes').add(payload);
+    return this.fireStore.collection('incomes').doc(response.id).set(payload);
+  }
+
+  async deleteIncome(id: string, userId: string) {
+    await this.fireStore.collection('users').doc(userId).collection('incomes').doc(id).delete();
+    await this.fireStore.collection('incomes').doc(id).delete();
   }
 }

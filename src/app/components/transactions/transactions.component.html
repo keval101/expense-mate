@@ -5,18 +5,29 @@
 </div>
 
 <div class="section-content transactions">
-    <div class="flex gap-4 justify-end">
-        <button class="add-btn !ml-0" [routerLink]="['/expenses/add']">Add Expense</button>
-        <button class="add-btn !ml-0" (click)="onFilter()">
-            <img src="/icons/filter-white.svg" alt="">
-        </button>
+    
+    <div class="flex gap-4 justify-between">
+        <div class="transactions__total">
+            <p>{{totalExpense | currency:'INR'}}</p>
+        </div>
+        <div class="flex gap-4">
+            <button class="add-btn !ml-0" [routerLink]="['/expenses/add']">Add Expense</button>
+            <button class="add-btn !ml-0" (click)="onFilter()">
+                <img src="/icons/filter-white.svg" alt="">
+            </button>
+        </div>
     </div>
+
+    <div class="transactions__search">
+        <input type="text" name="search" id="" placeholder="Search.." #search (input)="onSearch(search.value)">
+    </div>
+
     @if(isLoading) {
     <app-spinner></app-spinner>
     } @else {
     @for(item of expenses; track item) {
     <div class="transactions__card">
-        <button (click)="deleteExpense(item)" class="close-btn"><img src="/icons/close-red.svg" alt=""></button>
+        <button (click)="setSelectedItem(item)" class="close-btn"><img src="/icons/close-red.svg" alt=""></button>
         <div class="transactions__card-image">
             <img [src]="getIcon(item?.type?.type)" alt="">
         </div>
@@ -38,3 +49,5 @@
         <app-transactions-filter (close)="filter = false" (onFilterEmit)="onFilteration($event)" [data]="filterValue" (onClearFilterEmit)="getExpenses()"></app-transactions-filter>
     </ng-template>
 </p-drawer>
+
+<app-delete [name]="selectedItem?.name" (onDelete)="deleteExpense(selectedItem)" (onCancel)="onCancel()"></app-delete>

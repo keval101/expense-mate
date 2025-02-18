@@ -42,7 +42,6 @@ export class DashboardComponent {
     this.dataService.getIncomes(this.user.id, month).subscribe((incomes) => {
       this.incomes = incomes;
       this.setBalance();
-      console.log(this.incomes, this.expenses);
     });
   }
 
@@ -50,14 +49,12 @@ export class DashboardComponent {
     this.dataService.getExpenses(this.user.id).subscribe(expenses => {
       this.expenses = expenses;
       this.setBalance();
-      console.log(this.incomes, this.expenses);
     })
   }
 
   setBalance() {
     this.totalIncome = this.incomes?.reduce((sum, item) => sum + (item.amount || 0), 0) || 0;
     this.totalExpense = this.expenses?.reduce((sum, item) => sum + (item.amount || 0), 0) || 0;
-    console.log(this.totalExpense, this.totalIncome)
     this.balance = this.totalIncome - this.totalExpense;    
     this.isLoading = false;
   }
