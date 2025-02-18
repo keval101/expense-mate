@@ -49,15 +49,19 @@ export class DataService {
         });
 
         const filteredExpenses = expenses.filter(expenses => expenses.user.id === userId);
-        console.log(expenses)
         return filteredExpenses;
       })
     );
   }
   
-  async saveExpense(payload: any, month: any) {
-    await this.fireStore.collection('users').doc(payload.user.id).collection('expenses').doc(month).set(payload);
-    return this.fireStore.collection('expenses').add(payload);
+  async saveExpense(payload: any) {
+    const response = await this.fireStore.collection('users').doc(payload.user.id).collection('expenses').add(payload);
+    return this.fireStore.collection('expenses').doc(response.id).set(payload);
+  }
+
+  async deleteExpense(id: string, userId: string) {
+    await this.fireStore.collection('users').doc(userId).collection('expenses').doc(id).delete();
+    await this.fireStore.collection('expenses').doc(id).delete();
   }
 
 

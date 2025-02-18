@@ -65,7 +65,6 @@ export class LoginComponent implements OnInit {
     this.form.controls['last_name'].updateValueAndValidity();
     this.form.controls['phone'].updateValueAndValidity();
 
-    console.log(this.form, this.isLogin)
   }
 
   submit() {
@@ -83,7 +82,6 @@ export class LoginComponent implements OnInit {
           }, 1000);
         }).catch(error => {
           this.isLoading = false;
-          console.log(error.message);
           let errorMessage = 'Something went wrong!';
           if (error.message.includes('invalid-credential')) {
             errorMessage = 'Invalid email or password!'
@@ -92,15 +90,12 @@ export class LoginComponent implements OnInit {
         });
       } else {
         this.authService.register(this.form.value.email, this.form.value.password).then(async (res: any) => {
-          console.log('register', res, res.user.uid,)
           this.isLoading = false;
           payload['id'] = res.user.uid;
-          console.log('payload', payload)
           await this.authService.storeUserData(payload); // Wait for data storage
           this.toastService.displayToast('success', 'Sign Up', 'Sign Up successfully!');
         }).catch(error => {
           this.isLoading = false;
-          console.log(error.message);
           let errorMessage = 'Something went wrong!';
           if (error.message.includes('email')) {
             errorMessage = 'Email already exists!'

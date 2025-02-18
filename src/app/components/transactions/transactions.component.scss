@@ -1,9 +1,9 @@
 .transactions {
     &__card {
-        @apply flex items-center gap-4 px-2 py-3 bg-gray-50 rounded-2xl;
+        @apply flex items-center gap-4 px-2 py-3 bg-gray-50 rounded-2xl relative;
 
         &:not(:last-child) {
-            margin-bottom: 8px;
+            margin-bottom: 12px;
         }
 
         &-image {
@@ -44,5 +44,36 @@
                 color: #F95B51;
             }
         }
+
+        .close-btn {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+
+            img {
+                width: 20px;
+                height: 20px;
+            }
+        }
+    }
+}
+
+.add-btn {
+    img {
+        width: 20px;
+    }
+}
+
+.custom-drawer {
+    &.p-drawer {
+        width: 450px;
+        margin: 0 auto;
+        border-radius: 24px 24px 0 0;
+    }
+
+    &.p-drawer-bottom {
+        justify-content: flex-start;
+        padding: 24px;
+        height: auto;
     }
 }

@@ -11,7 +11,6 @@ export class ToastService {
   constructor() { }
 
   displayToast(type: string, message: string, subText: string) {
-    console.log(message, type, subText)
     this.toast$.next({ message, type, subText });
   }
 }

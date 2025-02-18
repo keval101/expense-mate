@@ -40,13 +40,11 @@ export class AuthService {
       return;
     }
   
-    console.log('storeUserData', payload);
     this.fireStore
       .collection('/users')
       .doc(payload.id)
       .set(payload)
       .then(() => {
-        console.log('User data stored successfully');
       })
       .catch((error) => {
         console.error('Error storing user data:', error);

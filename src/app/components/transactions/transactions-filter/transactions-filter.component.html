@@ -1,0 +1,40 @@
+<div class="filter">
+    <div class="flex items-center justify-between">
+        <p class="flex items-center gap-2">
+            <img src="/icons/filter.svg" alt="" width="24px" height="24px">
+            Filter
+        </p>
+
+        <button class="!px-0" (click)="close.emit(true)"><img src="/icons/close.svg" alt="" width="24px" height="24px"></button>
+    </div>
+
+    <div class="form mt-8">
+        <form class="form" [formGroup]="form">
+            <div class="form__group">
+                <label for="type">Type</label>
+                <p-multiselect [options]="expenseTypes" optionLabel="name" optionValue="type" formControlName="type" placeholder="Type"/>
+            </div>
+
+            <div class="form__group">
+                <label for="type">Month</label>
+                <p-multiselect [options]="months" placeholder="Month" formControlName="month"/>
+
+            </div>
+
+            <div class="form__group flex !flex-row items-center gap-4">
+                <p-checkbox formControlName="topSpending" [binary]="true" inputId="topSpending" />
+                <label for="topSpending" class="!mb-0">Top Spending</label>
+            </div>
+        </form>
+
+        <div class="flex justify-between">
+            <button class="form__btn clear" (click)="clearAll()">
+                Clear
+            </button>
+
+            <button class="form__btn" (click)="onFilter()">
+                Filter
+            </button>
+        </div>
+    </div>
+</div>

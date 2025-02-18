@@ -1,5 +1,5 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { SharedModule } from '../../../shared/shared.module';
@@ -62,7 +62,6 @@ export class TransactionsCreateComponent implements OnInit {
     this.dataService.getExpenseTypes(userId).pipe(takeUntil(this.destroy$)).subscribe((data) => {
       this.expenseTypes = data;
       this.isLoading = false;
-      console.log(this.expenseTypes);
     });
   }
 
@@ -71,12 +70,11 @@ export class TransactionsCreateComponent implements OnInit {
     const payload = {
       ...this.form.value,
       user: this.user,
-      date: this.datepipe.transform(this.form.value.date, 'MMM dd, yyyy')
+      date: this.datepipe.transform(this.form.value.date, 'MMM dd, yyyy'),
+      month: this.datepipe.transform(this.form.value.date, 'MMM, yyyy')
     }
-    const month = this.datepipe.transform(this.form.value.date, 'MMM, yyyy');
-    console.log(month, payload);
-    this.dataService.saveExpense(payload, month).then((data) => {
-      this.toastService.displayToast('success', 'Expense', 'Expense Saved!'); this
+    this.dataService.saveExpense(payload).then((data) => {
+      this.toastService.displayToast('success', 'Expense', 'Expense Saved!');
       this.isLoading = false;
       setTimeout(() => {
         this.router.navigate(['/expenses'])

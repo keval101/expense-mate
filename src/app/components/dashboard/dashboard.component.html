@@ -7,7 +7,13 @@
   <div class="dashboard__card">
     <div>
       <p class="total">Total Balance</p>
-      <p class="balance">{{ 25000 | currency : "INR" }}</p>
+      <p class="balance w-fit">
+        @if(isLoading) {
+          <app-spinner></app-spinner>
+          } @else {
+            {{ balance | currency : "INR" }}
+          }
+      </p>
     </div>
 
     <div class="flex justify-between mt-5">
@@ -18,7 +24,13 @@
           </div>
           <p>Income</p>
         </div>
-        <p class="income__money">{{ 25000 | currency : "INR" }}</p>
+        <p class="income__money">
+          @if(isLoading) {
+            <app-spinner></app-spinner>
+            } @else {
+              {{ totalIncome | currency : "INR" }}
+            }
+        </p>
       </div>
 
       <div class="expense">
@@ -28,7 +40,13 @@
           </div>
           <p>Expense</p>
         </div>
-        <p class="income__money">{{ 25000 | currency : "INR" }}</p>
+        <p class="income__money">
+          @if(isLoading) {
+          <app-spinner></app-spinner>
+          } @else {
+            {{ totalExpense | currency : "INR" }}
+          }
+        </p>
       </div>
     </div>
   </div>

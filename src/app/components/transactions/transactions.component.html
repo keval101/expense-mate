@@ -5,12 +5,18 @@
 </div>
 
 <div class="section-content transactions">
-    <button class="add-btn" [routerLink]="['/expenses/add']">Add Expense</button>
+    <div class="flex gap-4 justify-end">
+        <button class="add-btn !ml-0" [routerLink]="['/expenses/add']">Add Expense</button>
+        <button class="add-btn !ml-0" (click)="onFilter()">
+            <img src="/icons/filter-white.svg" alt="">
+        </button>
+    </div>
     @if(isLoading) {
     <app-spinner></app-spinner>
     } @else {
     @for(item of expenses; track item) {
     <div class="transactions__card">
+        <button (click)="deleteExpense(item)" class="close-btn"><img src="/icons/close-red.svg" alt=""></button>
         <div class="transactions__card-image">
             <img [src]="getIcon(item?.type?.type)" alt="">
         </div>
@@ -27,3 +33,8 @@
     }
     }
 </div>
+<p-drawer [(visible)]="filter" position="bottom" styleClass="custom-drawer"> 
+    <ng-template #headless>
+        <app-transactions-filter (close)="filter = false" (onFilterEmit)="onFilteration($event)" [data]="filterValue" (onClearFilterEmit)="getExpenses()"></app-transactions-filter>
+    </ng-template>
+</p-drawer>
