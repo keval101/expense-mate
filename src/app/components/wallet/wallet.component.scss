@@ -1,0 +1,68 @@
+.wallet {
+    &__balanace {
+        border-radius: 100px;
+        padding: 12px 16px;
+        margin-bottom: 26px;
+        margin-left: auto;
+        background: linear-gradient(185deg, #63B5AE 0%, #438883 100%);
+        box-shadow: 0px 1px 10px #3e7c789c;
+
+        p {
+            font-size: 14px;
+            color: #fff;
+
+            span {
+                @apply font-semibold;
+                font-size: 24px;
+                padding-left: 6px;
+            }
+        }
+    }
+
+    &__card {
+        @apply flex items-center gap-4 px-2 py-3 bg-gray-50 rounded-2xl;
+
+        &:not(:last-child) {
+            margin-bottom: 8px;
+        }
+
+        &-image {
+            @apply flex justify-center items-center;
+            background-color: #F0F6F5;
+            border-radius: 100px;
+            width: 50px;
+            height: 50px;
+
+            img {
+                width: 24px;
+                height: 24px;
+            }
+        }
+
+        &-info {
+            .name {
+                @apply font-semibold;
+                font-size: 16px;
+                color: #000;
+            }
+
+            .date {
+                font-size: 13px;
+                color: #666666;
+            }
+        }
+
+        &-money {
+            @apply ml-auto font-semibold;
+            font-size: 18px;
+
+            &.green {
+                color: #25A969;
+            }
+
+            &.red {
+                color: #F95B51;
+            }
+        }
+    }
+}

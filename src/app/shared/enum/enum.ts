@@ -7,4 +7,6 @@ export enum ExpenseTypeIcons {
     savings = '/icons/savings.svg',
     others = '/icons/others.svg',
     food = '/icons/food.svg',
+    recharge = '/icons/recharge.svg', 
+    "chhas-dudh" = '/icons/chhas-dudh.svg', 
 }

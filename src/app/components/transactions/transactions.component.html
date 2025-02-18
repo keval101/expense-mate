@@ -5,21 +5,25 @@
 </div>
 
 <div class="section-content transactions">
-    <button class="add-btn" [routerLink]="['/transactions/add']">Add Expense</button>
-    <!-- @if(isLoading) {
-        <app-spinner></app-spinner>
+    <button class="add-btn" [routerLink]="['/expenses/add']">Add Expense</button>
+    @if(isLoading) {
+    <app-spinner></app-spinner>
     } @else {
-        @for(item of expenseTypes; track item) { -->
-            <div class="transactions__card">
-                <div class="transactions__card-image">
-                    <img src="/icons/fuel.svg" alt="">
-                </div>
-                <div class="transactions__card-info">
-                    <p class="name">Patrol</p>
-                    <p class="date">20 Feb, 2025</p>
-                </div>
-                <p class="transactions__card-money green">850.00</p>
-            </div>
-        <!-- }
-    } -->
+    @for(item of expenses; track item) {
+    <div class="transactions__card">
+        <div class="transactions__card-image">
+            <img [src]="getIcon(item?.type?.type)" alt="">
+        </div>
+        <div class="transactions__card-info">
+            <p class="name">{{item?.name}}</p>
+            <p class="date">{{item?.date}}</p>
+        </div>
+        <p class="transactions__card-money green">{{item?.amount | currency: 'INR'}}</p>
+    </div>
+    }
+
+    @if(!expenses.length) {
+    <p class="text-center">No Expenses Found!</p>
+    }
+    }
 </div>

@@ -1,34 +1,31 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { SharedModule } from '../../../shared/shared.module';
-import { SelectModule } from 'primeng/select';
 import { DatePickerModule } from 'primeng/datepicker';
-import { DataService } from '../../../shared/services/data.service';
+import { SharedModule } from '../../../shared/shared.module';
+import { Subject } from 'rxjs';
 import { AuthService } from '../../../shared/services/auth.service';
-import { Subject, takeUntil } from 'rxjs';
+import { DataService } from '../../../shared/services/data.service';
 import { ToastService } from '../../../shared/services/toast.service';
 
 @Component({
-  selector: 'app-transactions-create',
+  selector: 'app-income-create',
   imports: [
     CommonModule,
     ReactiveFormsModule,
     RouterModule,
     SharedModule,
-    SelectModule,
     DatePickerModule
   ],
   providers: [DatePipe],
-  templateUrl: './transactions-create.component.html',
-  styleUrl: './transactions-create.component.scss'
+  templateUrl: './income-create.component.html',
+  styleUrl: './income-create.component.scss'
 })
-export class TransactionsCreateComponent implements OnInit {
-
+export class IncomeCreateComponent {
   form!: FormGroup;
   expenseTypes: any[] = [];
-  isLoading = true;
+  isLoading = false;
   user: any;
   destroy$ = new Subject<void>();
 
@@ -45,51 +42,32 @@ export class TransactionsCreateComponent implements OnInit {
   ngOnInit(): void {
     this.form = this.fb.group({
       name: ['', Validators.required],
-      type: ['', Validators.required],
       amount: ['', Validators.required],
       date: ['', Validators.required]
     })
 
     this.authService.getCurrentUserDetail().then(user => {
       this.user = user;
-      this.getExpenseTypes(this.user.id);
     })
-
   }
 
-  getExpenseTypes(userId: string) {
-    this.isLoading = true;
-    this.dataService.getExpenseTypes(userId).pipe(takeUntil(this.destroy$)).subscribe((data) => {
-      this.expenseTypes = data;
-      this.isLoading = false;
-      console.log(this.expenseTypes);
-    });
-  }
-
-  submitExpense() {
+  submitIncome() {
     this.isLoading = true;
     const payload = {
       ...this.form.value,
       user: this.user,
-      date: this.datepipe.transform(this.form.value.date, 'MMM dd, yyyy')
+      date: this.datepipe.transform(this.form.value.date, 'MMM dd, yyyy'),
+      month: this.datepipe.transform(this.form.value.date, 'MMM, yyyy')
     }
-    const month = this.datepipe.transform(this.form.value.date, 'MMM, yyyy');
-    console.log(month, payload);
-    this.dataService.saveExpense(payload, month).then((data) => {
-      this.toastService.displayToast('success', 'Expense', 'Expense Saved!'); this
+    this.dataService.saveIncome(payload).then((data) => {
+      this.toastService.displayToast('success', 'Income', 'Income Saved!');
       this.isLoading = false;
       setTimeout(() => {
-        this.router.navigate(['/expenses'])
+        this.router.navigate(['/wallet'])
       }, 1000);
     }).catch(() => {
       this.toastService.displayToast('error', 'Error', 'Something went wrong!');
       this.isLoading = false;
     });
   }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
-
 }

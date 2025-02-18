@@ -8,59 +8,62 @@
     </p>
 
     @if(isGetStarted) {
-        <form class="form px-8 mt-8" [formGroup]="form" (ngSubmit)="submit()">
+    <form class="form px-8 mt-8" [formGroup]="form" (ngSubmit)="submit()">
 
-            @if(!isLogin) {
-                <div class="form__group">
-                    <label for="first_name">First Name<span class="text-red-500">*</span></label>
-                    <input type="text" id="first_name" placeholder="First Name" formControlName="first_name">
-                </div>
-    
-                <div class="form__group">
-                    <label for="last_name">Last Name<span class="text-red-500">*</span></label>
-                    <input type="text" id="last_name" placeholder="Last Name" formControlName="last_name">
-                </div>
-    
-                <div class="form__group">
-                    <label for="phone">Phone<span class="text-red-500">*</span></label>
-                    <input type="number" id="phone" placeholder="Phone" formControlName="phone">
-                </div>
+        @if(!isLogin) {
+        <div class="form__group">
+            <label for="first_name">First Name<span class="text-red-500">*</span></label>
+            <input type="text" id="first_name" placeholder="First Name" formControlName="first_name">
+        </div>
+
+        <div class="form__group">
+            <label for="last_name">Last Name<span class="text-red-500">*</span></label>
+            <input type="text" id="last_name" placeholder="Last Name" formControlName="last_name">
+        </div>
+
+        <div class="form__group">
+            <label for="phone">Phone<span class="text-red-500">*</span></label>
+            <input type="number" id="phone" placeholder="Phone" formControlName="phone">
+        </div>
+        }
+
+
+        <div class="form__group">
+            <label for="email">Email<span class="text-red-500">*</span></label>
+            <input type="email" id="email" placeholder="Email" formControlName="email">
+        </div>
+
+        <div class="form__group relative">
+            <label for="password">Password<span class="text-red-500">*</span></label>
+            <input [attr.type]="isPasswordSeen ? 'text' : 'password'" id="password" placeholder="Password"
+                formControlName="password">
+            @if(isPasswordSeen) {
+            <img src="/icons/eye.svg" style="top: 36px" width="20" height="20" alt="eye"
+                class="absolute cursor-pointer right-2" (click)="isPasswordSeen = false">
+            } @else {
+            <img src="/icons/eye-closed.svg" style="top: 36px" width="20" height="20" alt="eye-slash"
+                class="absolute cursor-pointer right-2" (click)="isPasswordSeen = true">
             }
+        </div>
 
-            
-            <div class="form__group">
-                <label for="email">Email<span class="text-red-500">*</span></label>
-                <input type="email" id="email" placeholder="Email" formControlName="email">
-            </div>
-
-            <div class="form__group relative">
-                <label for="password">Password<span class="text-red-500">*</span></label>
-                <input [attr.type]="isPasswordSeen ? 'text' : 'password'" id="password" placeholder="Password" formControlName="password">
-                @if(isPasswordSeen) {
-                    <img src="/icons/eye.svg" style="top: 36px" width="20" height="20" alt="eye" class="absolute cursor-pointer right-2" (click)="isPasswordSeen = false">
-                } @else {
-                    <img src="/icons/eye-closed.svg" style="top: 36px" width="20" height="20" alt="eye-slash" class="absolute cursor-pointer right-2" (click)="isPasswordSeen = true">
-                }
-            </div>
-
-        </form>
+    </form>
     }
 
     @if(isGetStarted) {
-        <button class="form__btn" [disabled]="!form.valid" (click)="submit()">
-            @if(isLoading) {
-                <app-spinner></app-spinner>
-            } @else {
-                {{isLogin ? 'Login' : 'Sign Up'}}
-            }
-        </button>
+    <button class="form__btn" [disabled]="!form.valid" (click)="submit()">
+        @if(isLoading) {
+        <app-spinner></app-spinner>
+        } @else {
+        {{isLogin ? 'Login' : 'Sign Up'}}
+        }
+    </button>
     } @else {
-        <button class="form__btn" (click)="getStarted()">Get Started</button>
+    <button class="form__btn" (click)="getStarted()">Get Started</button>
     }
-    
+
     @if(isLogin) {
-        <p class="login__text">Don't have an account? <a class="cursor-pointer" (click)="onLoginAction()">Sign Up</a></p>
+    <p class="login__text">Don't have an account? <a class="cursor-pointer" (click)="onLoginAction()">Sign Up</a></p>
     } @else {
-        <p class="login__text">Already have account? <a  class="cursor-pointer"(click)="onLoginAction()">Log In</a></p>
+    <p class="login__text">Already have account? <a class="cursor-pointer" (click)="onLoginAction()">Log In</a></p>
     }
 </div>

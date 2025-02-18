@@ -15,29 +15,29 @@ import { Subject, takeUntil } from 'rxjs';
   templateUrl: './expense-types.component.html',
   styleUrl: './expense-types.component.scss'
 })
-export class ExpenseTypesComponent implements OnInit{
+export class ExpenseTypesComponent implements OnInit {
 
   expenseTypes: any[] = [];
   icons = ExpenseTypeIcons;
-  isLoading = false;
+  isLoading = true;
   user: any;
   destroy$ = new Subject<void>();
 
   constructor(
     private dataService: DataService,
     private authService: AuthService
-  ) {}
+  ) { }
 
-  ngOnInit(){
+  ngOnInit() {
     this.authService.getCurrentUserDetail().then(user => {
       this.user = user;
       this.getExpenseTypes(this.user.id);
     })
   }
-  
+
   getIcon(type: string | undefined): string {
-    return type && type in ExpenseTypeIcons 
-      ? ExpenseTypeIcons[type as keyof typeof ExpenseTypeIcons] 
+    return type && type in ExpenseTypeIcons
+      ? ExpenseTypeIcons[type as keyof typeof ExpenseTypeIcons]
       : '/icons/others.svg';
   }
 

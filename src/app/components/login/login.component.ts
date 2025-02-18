@@ -23,24 +23,24 @@ export class LoginComponent implements OnInit {
   isLoading = false;
   emailPattern = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
   form!: FormGroup;
-  
+
   constructor(
     private toastService: ToastService,
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router
-  ) {}
+  ) { }
 
 
   ngOnInit(): void {
     this.authService.logout();
-      this.form = this.fb.group({
-          first_name: ['Keval', Validators.required],
-          last_name: ['Vadhiya', Validators.required],
-          phone: ['6354139675', Validators.required],
-          email: ['', [Validators.required, Validators.pattern(this.emailPattern)]],
-          password: ['', Validators.required]
-      });
+    this.form = this.fb.group({
+      first_name: ['Keval', Validators.required],
+      last_name: ['Vadhiya', Validators.required],
+      phone: ['6354139675', Validators.required],
+      email: ['', [Validators.required, Validators.pattern(this.emailPattern)]],
+      password: ['', Validators.required]
+    });
   }
 
   getStarted() {
@@ -51,7 +51,7 @@ export class LoginComponent implements OnInit {
     this.isLogin = !this.isLogin;
     this.isGetStarted = true;
 
-    if(this.isLogin) {
+    if (this.isLogin) {
       this.form.controls['first_name'].setValidators(null);
       this.form.controls['last_name'].setValidators(null);
       this.form.controls['phone'].setValidators(null);
@@ -69,11 +69,11 @@ export class LoginComponent implements OnInit {
   }
 
   submit() {
-    if(this.form.valid) {
+    if (this.form.valid) {
       const payload = this.form.value;
       this.isLoading = true;
 
-      if(this.isLogin) {
+      if (this.isLogin) {
         this.authService.login(this.form.value.email, this.form.value.password).then((res: any) => {
           this.isLoading = false;
           localStorage.setItem('userId', res.user.uid);
@@ -85,7 +85,7 @@ export class LoginComponent implements OnInit {
           this.isLoading = false;
           console.log(error.message);
           let errorMessage = 'Something went wrong!';
-          if(error.message.includes('invalid-credential')) {
+          if (error.message.includes('invalid-credential')) {
             errorMessage = 'Invalid email or password!'
           }
           this.toastService.displayToast('error', 'Sign In', errorMessage);
@@ -97,12 +97,12 @@ export class LoginComponent implements OnInit {
           payload['id'] = res.user.uid;
           console.log('payload', payload)
           await this.authService.storeUserData(payload); // Wait for data storage
-          this.toastService.displayToast('success', 'Sign Up', 'Sign Up successfully!'); 
+          this.toastService.displayToast('success', 'Sign Up', 'Sign Up successfully!');
         }).catch(error => {
           this.isLoading = false;
           console.log(error.message);
           let errorMessage = 'Something went wrong!';
-          if(error.message.includes('email')) {
+          if (error.message.includes('email')) {
             errorMessage = 'Email already exists!'
           }
 

@@ -1,35 +1,39 @@
 <div class="section dashboard">
-    <div class="dashboard__greeting content-padding">
-        <p class="greeting">{{greeting}},</p>
-        <p class="username">{{name}}</p>
+  <div class="dashboard__greeting content-padding">
+    <p class="greeting">{{ greeting }},</p>
+    <p class="username">{{ name }}</p>
+  </div>
+
+  <div class="dashboard__card">
+    <div>
+      <p class="total">Total Balance</p>
+      <p class="balance">{{ 25000 | currency : "INR" }}</p>
     </div>
 
-    <div class="dashboard__card">
-        <div>
-            <p class="total">Total Balance</p>
-            <p class="balance">{{25000 | currency:'INR'}}</p>
+    <div class="flex justify-between mt-5">
+      <div class="income">
+        <div class="income__title flex items-center gap-2">
+          <div class="income__img">
+            <img src="/icons/arrow-down.svg" alt="" />
+          </div>
+          <p>Income</p>
         </div>
+        <p class="income__money">{{ 25000 | currency : "INR" }}</p>
+      </div>
 
-        <div class="flex justify-between mt-5">
-            <div class="income">
-                <div class="income__title flex items-center gap-2">
-                    <div class="income__img"><img src="/icons/arrow-down.svg" alt=""></div>
-                    <p>Income</p>
-                </div>
-                <p class="income__money">{{25000 | currency:'INR'}}</p>
-            </div>
-
-            <div class="expense">
-                <div class="expense__title flex items-center gap-2">
-                    <div class="expense__img"><img src="/icons/arrow-up.svg" alt=""></div>
-                    <p>Expense</p>
-                </div>
-                <p class="income__money">{{25000 | currency:'INR'}}</p>
-            </div>
+      <div class="expense">
+        <div class="expense__title flex items-center gap-2">
+          <div class="expense__img">
+            <img src="/icons/arrow-up.svg" alt="" />
+          </div>
+          <p>Expense</p>
         </div>
+        <p class="income__money">{{ 25000 | currency : "INR" }}</p>
+      </div>
     </div>
+  </div>
 </div>
 
 <div class="transactions-container">
-    <app-transactions-history></app-transactions-history>
+  <app-transactions-history></app-transactions-history>
 </div>

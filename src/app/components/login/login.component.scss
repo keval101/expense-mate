@@ -2,6 +2,7 @@
 
 .login {
     padding-bottom: 20px;
+
     &__header {
         @apply relative;
         background-size: cover;
@@ -29,6 +30,7 @@
     &__text {
         @apply text-center text-sm mt-4;
         transition: all 0.3s ease-in-out;
+
         a {
             color: $primary;
         }

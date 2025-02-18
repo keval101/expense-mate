@@ -5,23 +5,16 @@ import { TransactionsHistoryComponent } from '../transactions-history/transactio
 
 @Component({
   selector: 'app-dashboard',
-  imports: [
-    CommonModule,
-    TransactionsHistoryComponent
-  ],
+  imports: [CommonModule, TransactionsHistoryComponent],
   templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.scss'
+  styleUrl: './dashboard.component.scss',
 })
 export class DashboardComponent {
-
-
   greeting: string = '';
   name: string = '';
 
   user: any;
-  constructor(
-    private authService: AuthService
-  ) {
+  constructor(private authService: AuthService) {
     this.greeting = this.getGreeting();
 
     this.authService.getCurrentUserDetail().then((user) => {
@@ -36,13 +29,13 @@ export class DashboardComponent {
     let greeting;
 
     if (hours < 12) {
-        greeting = "Good morning";
+      greeting = 'Good morning';
     } else if (hours < 18) {
-        greeting = "Good afternoon";
+      greeting = 'Good afternoon';
     } else {
-        greeting = "Good evening";
+      greeting = 'Good evening';
     }
 
     return `${greeting}`;
-}
+  }
 }

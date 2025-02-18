@@ -4,6 +4,33 @@
     </div>
 </div>
 
-<div class="section-content">
-    Hello Wallet
+<div class="section-content wallet">
+    <div class="wallet__balanace">
+        <p>Availalbe Balance: <span>{{25000 | currency:'INR'}}</span></p>
+    </div>
+
+    <!-- <p class="title">Income history</p> -->
+    <div class="flex justify-between items-center mb-5">
+        <p class="title !mb-0">Income history</p>
+        <p class="subtitle cursor-pointer" [routerLink]="['/incomes/add']">Add Income</p>
+    </div>
+
+
+    @for(item of incomes; track item) {
+    <div class="wallet__card">
+        <div class="wallet__card-image">
+            <img src="/icons/money-bag.svg" alt="">
+        </div>
+        <div class="wallet__card-info">
+            <p class="name">{{item.name}}</p>
+            <p class="date">{{item.date}}</p>
+        </div>
+        <p class="wallet__card-money green">{{item.amount | currency: 'INR'}}</p>
+    </div>
+    }
+
+
+    @if(!incomes.length) {
+    <p class="text-center">No Incomes Found!</p>
+    }
 </div>

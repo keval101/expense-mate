@@ -8,6 +8,7 @@ import { TransactionsComponent } from './components/transactions/transactions.co
 import { TransactionsCreateComponent } from './components/transactions/transactions-create/transactions-create.component';
 import { WalletComponent } from './components/wallet/wallet.component';
 import { ExpenseTypesCreateComponent } from './components/expense-types/expense-types-create/expense-types-create.component';
+import { IncomeCreateComponent } from './components/wallet/income-create/income-create.component';
 
 export const routes: Routes = [
     {
@@ -47,5 +48,10 @@ export const routes: Routes = [
         path: 'wallet',
         component: WalletComponent,
         canActivate: [AuthGuard]
-    }
+    },
+    {
+        path: 'incomes/add',
+        component: IncomeCreateComponent,
+        canActivate: [AuthGuard]
+    },
 ];

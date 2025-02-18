@@ -1,7 +1,9 @@
 .dashboard {
     @apply relative;
+
     &__greeting {
         padding-top: 74px;
+
         .greeting {
             font-size: 14px;
             color: #fff;
@@ -45,6 +47,7 @@
                 font-size: 16px;
                 margin-bottom: 4px
             }
+
             &__img {
                 @apply flex items-center justify-center;
                 min-width: 24px;
@@ -56,6 +59,7 @@
                     height: 16px
                 }
             }
+
             &__money {
                 @apply font-semibold;
                 font-size: 20px;
