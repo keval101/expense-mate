@@ -160,6 +160,5 @@ export class TransactionsComponent {
       const dateB = new Date(b.date);
       return dateB.getTime() - dateA.getTime();
     });
-    this.expenses.length = this.expenses.length > 5 ? 5 : this.expenses.length;
   }
 }
