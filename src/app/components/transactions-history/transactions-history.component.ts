@@ -38,6 +38,16 @@ export class TransactionsHistoryComponent {
     this.dataService.getExpenses(this.user.id).subscribe((expenses) => {
       this.isLoading = false;
       this.expenses = expenses;
+      this.sortExpenses();
     });
+  }
+
+  sortExpenses() {
+    this.expenses = this.expenses.sort((a, b) => {
+      const dateA = new Date(a.date);
+      const dateB = new Date(b.date);
+      return dateB.getTime() - dateA.getTime();
+    });
+    this.expenses.length = this.expenses.length > 5 ? 5 : this.expenses.length;
   }
 }

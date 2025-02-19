@@ -126,6 +126,7 @@ export class TransactionsComponent {
   }
 
   setTotalExpense() {
+    this.sortExpenses();
     this.totalExpense = this.expenses?.reduce((sum, item) => sum + (item.amount || 0), 0) || 0;
   }
 
@@ -151,5 +152,14 @@ export class TransactionsComponent {
   async deleteExpense(item: any) {
    await this.dataService.deleteExpense(item.id, item.user.id)
    this.toastService.displayToast('success', 'Expense', 'Expense Deleted!');
+  }
+
+  sortExpenses() {
+    this.expenses = this.expenses.sort((a, b) => {
+      const dateA = new Date(a.date);
+      const dateB = new Date(b.date);
+      return dateB.getTime() - dateA.getTime();
+    });
+    this.expenses.length = this.expenses.length > 5 ? 5 : this.expenses.length;
   }
 }

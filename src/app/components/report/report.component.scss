@@ -1,0 +1,129 @@
+.add-btn {
+    height: fit-content;
+    img {
+        min-width: 20px;
+        max-width: 20px;
+    }
+}
+
+.report {
+
+    .overview {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+        &__card {
+            @apply flex flex-col gap-2 px-2 py-3 bg-gray-50 relative;
+            border-radius: 10px;
+            &-title {
+                @apply font-semibold;
+                font-size: 12px;
+                color: #666666;
+            }
+            &-value {
+                @apply font-semibold;
+                font-size: 18px;
+                color: #2F7E79 ;
+
+                &.income {
+                    color: #000 ;
+                }
+
+                &.expense {
+                    color: #F95B51
+                }
+
+                &.balance {
+                    color: #666666
+                }
+
+                &.savings {
+                    color: #2F7E79;
+                }
+            }
+        }
+    }
+    &__card {
+        @apply flex items-center gap-4 px-2 py-3 bg-gray-50 rounded-2xl relative;
+
+        &:not(:last-child) {
+            margin-bottom: 12px;
+        }
+
+        &-image {
+            @apply flex justify-center items-center;
+            background-color: #F0F6F5;
+            border-radius: 100px;
+            width: 50px;
+            height: 50px;
+
+            img {
+                width: 24px;
+                height: 24px;
+            }
+        }
+
+        &-info {
+            .name {
+                @apply font-semibold;
+                font-size: 16px;
+                color: #000;
+            }
+
+            .date {
+                font-size: 13px;
+                color: #666666;
+            }
+        }
+
+        &-money {
+            @apply ml-auto font-semibold;
+            font-size: 18px;
+
+            &.green {
+                color: #25A969;
+            }
+
+            &.red {
+                color: #F95B51;
+            }
+        }
+
+        .close-btn {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+
+            img {
+                width: 20px;
+                height: 20px;
+            }
+        }
+    }
+
+    .p-accordionpanel{
+        border: none;
+        margin-bottom: 20px;
+    }
+
+    .p-accordionheader {
+        background: #2F7E79 !important;
+        color: #fff !important;
+    }
+
+    .p-accordionpanel .p-accordionheader {
+        border-radius: 35px !important;
+        transition: all 0.3s ease-in;
+    }
+
+    .p-accordionpanel-active .p-accordionheader {
+        border-radius: 35px 35px 0 0 !important;
+        transition: all 0.3s ease-in;
+    }
+
+    .p-accordioncontent-content {
+        background: #F0F6F5;
+        border-radius: 0 0 35px 35px;
+        padding: 24px;
+    }
+}

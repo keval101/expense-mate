@@ -83,7 +83,7 @@
       <p class="sidebar__items-item-title">Wallet</p>
     </a>
 
-    <a class="sidebar__items-item" (click)="hideSidebar()">
+    <a class="sidebar__items-item" (click)="hideSidebar()" routerLinkActive="active" [routerLink]="['/reports']">
       <div class="sidebar__items-item-icon">
         <svg
           fill="#000000"

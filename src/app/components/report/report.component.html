@@ -1,0 +1,104 @@
+<div class="section dashboard">
+    <div class="content-padding">
+        <p class="section-title">Reports</p>
+    </div>
+</div>
+
+<div class="section-content report">
+    
+    <div class="flex gap-4 justify-between">
+        <div class="flex gap-4">
+            <button class="add-btn !ml-0" (click)="onFilter()">
+                <img src="/icons/filter-white.svg" alt="">
+            </button>
+        </div>
+    </div>
+
+    <p-accordion>
+        @for(item of groupedExpenses; track item) {
+            <p-accordion-panel value="0">
+                <p-accordion-header>{{item?.month}}</p-accordion-header>
+                <p-accordion-content>
+
+                    <div class="mb-8">
+                        <p class="title mb-0">Overview</p>
+
+                        <div class="overview">
+                            <div class="overview__card">
+                                <p class="overview__card-title">Incomes</p>
+                                <p class="overview__card-value income">{{getMonthIncome(item?.month) | currency: 'INR'}}</p>
+                            </div>
+                            <div class="overview__card">
+                                <p class="overview__card-title">Expenses</p>
+                                <p class="overview__card-value expense">{{(item?.totalExpense || 0) | currency: 'INR'}}</p>
+                            </div>
+                            <div class="overview__card">
+                                <p class="overview__card-title">Balance</p>
+                                <p class="overview__card-value balance">{{((getMonthIncome(item?.month) - item?.totalExpense) || 0) | currency: 'INR'}}</p>
+                            </div>
+                            <div class="overview__card">
+                                <p class="overview__card-title">Savings</p>
+                                <p class="overview__card-value savings">{{(item?.totalSavings || '') | currency: 'INR'}}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <p class="title mb-0">Top Spending</p>
+                        
+                        <div class="report__card">
+                            <div class="report__card-image">
+                                <img [src]="getIcon(item?.topSpending?.type?.type)" alt="">
+                            </div>
+                            <div class="report__card-info">
+                                <p class="name">{{item?.topSpending?.name}}</p>
+                                <p class="date">{{item?.topSpending?.date}}</p>
+                            </div>
+                            <p class="report__card-money green">{{item?.topSpending?.amount | currency: 'INR'}}</p>
+                        </div>
+                    </div>
+                </p-accordion-content>
+            </p-accordion-panel>
+        }
+    </p-accordion>
+    <!-- <div class="report__card">
+        <div class="report__card-header">
+            Feb, 2025
+        </div>
+
+        <div class="report__content">
+            <p>Income: {{10000 | currency:'INR'}}</p>
+            <p>Expense: {{10000 | currency:'INR'}}</p>
+            <p>Remaining Balance: {{10000 | currency:'INR'}}</p>
+        </div>
+    </div> -->
+
+    <!-- @if(isLoading) {
+    <app-spinner></app-spinner>
+    } @else {
+    @for(item of expenses; track item) {
+    <div class="report__card">
+        <button (click)="setSelectedItem(item)" class="close-btn"><img src="/icons/close-red.svg" alt=""></button>
+        <div class="report__card-image">
+            <img [src]="getIcon(item?.type?.type)" alt="">
+        </div>
+        <div class="report__card-info">
+            <p class="name">{{item?.name}}</p>
+            <p class="date">{{item?.date}}</p>
+        </div>
+        <p class="report__card-money green">{{item?.amount | currency: 'INR'}}</p>
+    </div>
+    }
+
+    @if(!expenses.length) {
+    <p class="text-center">No Expenses Found!</p>
+    }
+    } -->
+</div>
+<!-- <p-drawer [(visible)]="filter" position="bottom" styleClass="custom-drawer"> 
+    <ng-template #headless>
+        <app-report-filter (close)="filter = false" (onFilterEmit)="onFilteration($event)" [data]="filterValue" (onClearFilterEmit)="getExpenses()"></app-report-filter>
+    </ng-template>
+</p-drawer> -->
+
+<!-- <app-delete [name]="selectedItem?.name" (onDelete)="deleteExpense(selectedItem)" (onCancel)="onCancel()"></app-delete> -->

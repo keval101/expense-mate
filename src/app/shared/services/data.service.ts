@@ -66,10 +66,12 @@ export class DataService {
 
 
 
-  getIncomes(userId: string, month: any) {
-    return this.fireStore.collection('users').doc(userId).collection('incomes',
-      ref => ref.where('month', '==', month) 
-    ).snapshotChanges()
+  getIncomes(userId: string, month?: any) {
+    let query = this.fireStore.collection('users').doc(userId).collection('incomes');
+    if(month) {
+      query = this.fireStore.collection('users').doc(userId).collection('incomes', ref => ref.where('month', '==', month));
+    }
+    return query.snapshotChanges()
     .pipe(
       map((actions) => {
         const incomes = actions.map((a) => {

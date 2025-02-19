@@ -56,4 +56,12 @@ export class WalletComponent {
     this.selectedItem = {};
     this.isDelete = false;
   }
+
+  sortIncomes() {
+    this.incomes = this.incomes.sort((a, b) => {
+      const dateA = new Date(a.date);
+      const dateB = new Date(b.date);
+      return dateB.getTime() - dateA.getTime();
+    });
+  }
 }
