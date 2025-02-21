@@ -14,6 +14,6 @@ export class SplashComponent {
   constructor(private router: Router) { 
     setTimeout(() => {
       this.router.navigate(['/login']);
-    }, 2000);
+    }, 3000);
   }
 }

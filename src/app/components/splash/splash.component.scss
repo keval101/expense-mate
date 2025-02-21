@@ -1,8 +1,86 @@
 .splash {
-    @apply flex justify-center items-center h-screen;
+    @apply flex justify-center items-center h-screen flex-col;
     background: linear-gradient(185deg, #63B5AE 0%, #438883 100%);
+
+    &__logo {
+        position: relative;
+        img {
+            width: 100px;
+        }
+
+        .part1 {
+            position: relative;
+            z-index: 999;
+        }
+
+        .part2, .part3, .part4 {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .part2 {
+            animation: part2 0.6s ease-in-out;
+        }
+
+        .part3 {
+            animation: part3 0.6s ease-in-out;
+
+        }
+
+        .part4 {
+            animation: part4 0.6s ease-in-out;
+
+        }
+    }
     
     p {
         @apply text-white text-3xl font-semibold;
+        animation: title 0.6s ease-in-out;
+    }
+}
+
+
+@keyframes part2 {
+    0% {
+        transform: rotate(278deg);
+        opacity: 0;
+    }
+    100% {
+        transform: rotate(0);
+        opacity: 1;
+    }
+}
+
+@keyframes part3 {
+    0% {
+        transform: rotate(220deg);
+        opacity: 0;
+    }
+    100% {
+        transform: rotate(0);
+        opacity: 1;
+    }
+}
+
+@keyframes part4 {
+    0% {
+        transform: translateY(46px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes title {
+    0% {
+        transform: translateY(500px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
     }
 }
