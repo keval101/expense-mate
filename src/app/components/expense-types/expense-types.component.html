@@ -11,7 +11,7 @@
     @if(isLoading) {
     <app-spinner></app-spinner>
     } @else { @for(item of expenseTypes; track item) {
-    <div class="expense__card">
+    <div class="expense__card cursor-pointer" [routerLink]="['/expense-types/edit', item.id]">
         <div class="expense__card-image">
             <img [src]="getIcon(item?.type)" alt="" />
         </div>

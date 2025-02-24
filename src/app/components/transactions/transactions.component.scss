@@ -32,7 +32,11 @@
 
     &__card {
         @apply flex items-center gap-4 px-2 py-3 bg-gray-50 rounded-2xl relative;
-
+        border: 2px solid #F0F6F5;
+        transition: all 0.3s ease-in-out;
+        &:hover {
+            border-color: #63B5AE;
+        }
         &:not(:last-child) {
             margin-bottom: 12px;
         }

@@ -29,8 +29,16 @@ export class DataService {
     );
   }
 
-  saveExpenseType(payload: any) {
-    return this.fireStore.collection('types').add(payload);
+  getExpenseTypeDetail(id: string) {
+    return this.fireStore.collection('types').doc(id).get().toPromise();
+  }
+
+  saveExpenseType(payload: any, id?: any) {
+    if(id) {
+      return this.fireStore.collection('types').doc(id).update(payload);
+    } else {
+      return this.fireStore.collection('types').add(payload);
+    }
   }
   
   deleteExpenseType(id: string) {
@@ -53,10 +61,19 @@ export class DataService {
       })
     );
   }
+
+  getExpenseDetail(id: string) {
+    return this.fireStore.collection('expenses').doc(id).get().toPromise();
+  }
   
-  async saveExpense(payload: any) {
-    const response = await this.fireStore.collection('users').doc(payload.user.id).collection('expenses').add(payload);
-    return this.fireStore.collection('expenses').doc(response.id).set(payload);
+  async saveExpense(payload: any, id?: any) {
+    if(id) {
+      const response = await this.fireStore.collection('users').doc(payload.user.id).collection('expenses').doc(id).update(payload);
+      return this.fireStore.collection('expenses').doc(id).update(payload);
+    } else {
+      const response = await this.fireStore.collection('users').doc(payload.user.id).collection('expenses').add(payload);
+      return this.fireStore.collection('expenses').doc(response.id).set(payload);
+    }
   }
 
   async deleteExpense(id: string, userId: string) {
@@ -81,12 +98,21 @@ export class DataService {
         });
         return incomes;
       })
-    );;
+    );
   }
 
-  async saveIncome(payload: any) {
-    const response =  await this.fireStore.collection('users').doc(payload.user.id).collection('incomes').add(payload);
-    return this.fireStore.collection('incomes').doc(response.id).set(payload);
+  getIncomeDetail(id: string) {
+    return this.fireStore.collection('incomes').doc(id).get().toPromise();
+  }
+
+  async saveIncome(payload: any, id?: any) {
+    if(id) {
+      const response = await this.fireStore.collection('users').doc(payload.user.id).collection('incomes').doc(id).update(payload);
+      return this.fireStore.collection('incomes').doc(id).update(payload);
+    } else {
+      const response = await this.fireStore.collection('users').doc(payload.user.id).collection('incomes').add(payload);
+      return this.fireStore.collection('incomes').doc(response.id).set(payload);
+    }
   }
 
   async deleteIncome(id: string, userId: string) {

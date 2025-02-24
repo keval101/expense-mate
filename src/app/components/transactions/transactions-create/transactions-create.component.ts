@@ -1,7 +1,7 @@
 import { CommonModule, DatePipe } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { SharedModule } from '../../../shared/shared.module';
 import { SelectModule } from 'primeng/select';
 import { DatePickerModule } from 'primeng/datepicker';
@@ -31,6 +31,8 @@ export class TransactionsCreateComponent implements OnInit {
   isLoading = true;
   user: any;
   destroy$ = new Subject<void>();
+  id: string = '';
+  expense: any = {};
 
 
   constructor(
@@ -39,7 +41,8 @@ export class TransactionsCreateComponent implements OnInit {
     private authService: AuthService,
     private datepipe: DatePipe,
     private router: Router,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
@@ -55,6 +58,18 @@ export class TransactionsCreateComponent implements OnInit {
       this.getExpenseTypes(this.user.id);
     })
 
+    this.route.params.subscribe(params => {
+      this.id = params['id'];
+      this.getExpenseDetail();
+    });
+  }
+
+  getExpenseDetail() {
+    this.dataService.getExpenseDetail(this.id).then((data) => {
+      this.expense = data?.data();
+      this.form.patchValue(this.expense)
+      this.form.get('date')?.setValue(new Date(this.expense.date));
+    });
   }
 
   getExpenseTypes(userId: string) {
@@ -73,7 +88,7 @@ export class TransactionsCreateComponent implements OnInit {
       date: this.datepipe.transform(this.form.value.date, 'MMM dd, yyyy'),
       month: this.datepipe.transform(this.form.value.date, 'MMM, yyyy')
     }
-    this.dataService.saveExpense(payload).then((data) => {
+    this.dataService.saveExpense(payload, this.id).then((data) => {
       this.toastService.displayToast('success', 'Expense', 'Expense Saved!');
       this.isLoading = false;
       setTimeout(() => {

@@ -36,6 +36,11 @@ export const routes: Routes = [
         canActivate: [AuthGuard]
     },
     {
+        path: 'expense-types/edit/:id',
+        component: ExpenseTypesCreateComponent,
+        canActivate: [AuthGuard]
+    },
+    {
         path: 'expenses',
         component: TransactionsComponent,
         canActivate: [AuthGuard],
@@ -46,12 +51,22 @@ export const routes: Routes = [
         canActivate: [AuthGuard]
     },
     {
+        path: 'expenses/edit/:id',
+        component: TransactionsCreateComponent,
+        canActivate: [AuthGuard]
+    },
+    {
         path: 'wallet',
         component: WalletComponent,
         canActivate: [AuthGuard]
     },
     {
         path: 'incomes/add',
+        component: IncomeCreateComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'incomes/edit/:id',
         component: IncomeCreateComponent,
         canActivate: [AuthGuard]
     },

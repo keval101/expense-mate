@@ -39,7 +39,7 @@ export class AppComponent implements OnInit{
     setTimeout(() => {
       const url = this.router.url.replaceAll('/', '');
       this.needSidebar = !this.routes.includes(url);
-    }, 500);
+    }, 800);
   }
 
   onActivate(event: any) {

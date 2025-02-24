@@ -6,7 +6,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { DataService } from '../../../shared/services/data.service';
 import { AuthService } from '../../../shared/services/auth.service';
 import { ToastService } from '../../../shared/services/toast.service';
@@ -23,13 +23,16 @@ export class ExpenseTypesCreateComponent implements OnInit {
   form!: FormGroup;
   isLoading = false;
   user: any;
+  id: string = '';
+  expenseType: any = {};
 
   constructor(
     private fb: FormBuilder,
     private dataService: DataService,
     private authService: AuthService,
     private router: Router,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
@@ -38,6 +41,19 @@ export class ExpenseTypesCreateComponent implements OnInit {
     });
     this.form = this.fb.group({
       name: ['', Validators.required],
+    });
+
+    this.route.params.subscribe(params => {
+      this.id = params['id'];
+      this.getExpenseTypeDetail();
+    });
+  }
+
+  getExpenseTypeDetail() {
+    console.log(this.id)
+    this.dataService.getExpenseTypeDetail(this.id).then((data) => {
+      this.expenseType = data;
+      this.form.patchValue(this.expenseType);
     });
   }
 
@@ -50,7 +66,7 @@ export class ExpenseTypesCreateComponent implements OnInit {
       type: this.form.value.name.toLowerCase().replace(' ', '-'),
     };
 
-    await this.dataService.saveExpenseType(payload).catch(() => {
+    await this.dataService.saveExpenseType(payload, this.id).catch(() => {
       this.toastService.displayToast('error', 'Error', 'Something went wrong!');
       this.isLoading = false;
     });

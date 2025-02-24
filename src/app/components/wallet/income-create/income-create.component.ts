@@ -1,7 +1,7 @@
 import { CommonModule, DatePipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { DatePickerModule } from 'primeng/datepicker';
 import { SharedModule } from '../../../shared/shared.module';
 import { Subject } from 'rxjs';
@@ -28,6 +28,8 @@ export class IncomeCreateComponent {
   isLoading = false;
   user: any;
   destroy$ = new Subject<void>();
+  id: string = '';
+  income: any = {}; 
 
 
   constructor(
@@ -36,7 +38,8 @@ export class IncomeCreateComponent {
     private authService: AuthService,
     private datepipe: DatePipe,
     private router: Router,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
@@ -49,6 +52,20 @@ export class IncomeCreateComponent {
     this.authService.getCurrentUserDetail().then(user => {
       this.user = user;
     })
+
+    this.route.params.subscribe(params => {
+      this.id = params['id'];
+      this.getExpenseDetail();
+    });
+  }
+
+  getExpenseDetail() {
+    console.log(this.id)
+    this.dataService.getExpenseDetail(this.id).then((data) => {
+      this.income = data?.data();
+      this.form.patchValue(this.income)
+      this.form.get('date')?.setValue(new Date(this.income.date));
+    });
   }
 
   submitIncome() {
@@ -59,7 +76,7 @@ export class IncomeCreateComponent {
       date: this.datepipe.transform(this.form.value.date, 'MMM dd, yyyy'),
       month: this.datepipe.transform(this.form.value.date, 'MMM, yyyy')
     }
-    this.dataService.saveIncome(payload).then((data) => {
+    this.dataService.saveIncome(payload, this.id).then((data) => {
       this.toastService.displayToast('success', 'Income', 'Income Saved!');
       this.isLoading = false;
       setTimeout(() => {
