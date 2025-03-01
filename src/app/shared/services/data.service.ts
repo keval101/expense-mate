@@ -93,8 +93,8 @@ export class DataService {
 
   getExpenses(userId: string, month?: any) {
     let query = this.fireStore.collection('users').doc(userId).collection('expenses');
-    if(month) {
-      query = this.fireStore.collection('users').doc(userId).collection('expenses', ref => ref.where('month', '==', month));
+    if(month?.length) {
+      query = this.fireStore.collection('users').doc(userId).collection('expenses', ref => ref.where('month', 'in', month));
     }
     return query.snapshotChanges()
     .pipe(
@@ -135,8 +135,8 @@ export class DataService {
 
   getIncomes(userId: string, month?: any) {
     let query = this.fireStore.collection('users').doc(userId).collection('incomes');
-    if(month) {
-      query = this.fireStore.collection('users').doc(userId).collection('incomes', ref => ref.where('month', '==', month));
+    if(month?.length) {
+      query = this.fireStore.collection('users').doc(userId).collection('incomes', ref => ref.where('month', 'in', month));
     }
     return query.snapshotChanges()
     .pipe(

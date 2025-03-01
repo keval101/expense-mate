@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from '../../shared/shared.module';
@@ -16,13 +16,16 @@ export class TransactionsHistoryComponent {
   isLoading = true;
   expenses: any[] = [];
   user: any;
+  month: any[] = [];
 
   constructor(
     private dataService: DataService,
-    private authService: AuthService
+    private authService: AuthService,
+    private datePipe: DatePipe
   ) {
     this.authService.getCurrentUserDetail().then((user) => {
       this.user = user;
+      this.month = [this.datePipe.transform(new Date(), 'MMM, yyyy')];
       this.getExpenses();
     });
   }
@@ -35,7 +38,7 @@ export class TransactionsHistoryComponent {
 
   getExpenses() {
     this.isLoading = true;
-    this.dataService.getExpenses(this.user.id).subscribe((expenses) => {
+    this.dataService.getExpenses(this.user.id, this.month).subscribe((expenses) => {
       this.isLoading = false;
       this.expenses = expenses;
       this.sortExpenses();

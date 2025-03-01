@@ -4,14 +4,15 @@ import { DataService } from '../../shared/services/data.service';
 import { CommonModule, DatePipe } from '@angular/common';
 import { AccordionModule } from 'primeng/accordion';
 import { ExpenseTypeIcons } from '../../shared/enum/enum';
+import { SharedModule } from '../../shared/shared.module';
 
 @Component({
   selector: 'app-report',
   imports: [
     CommonModule,
-    AccordionModule
+    AccordionModule,
     // RouterModule,
-    // SharedModule,
+    SharedModule,
     // DrawerModule,
   ],
   providers: [DatePipe],
@@ -59,7 +60,6 @@ export class ReportComponent {
       this.expenses = expenses;
       this.allExpenses = JSON.parse(JSON.stringify(expenses));
       const month = this.datepipe.transform(new Date(), 'MMM, yyyy');
-      console.log(this.expenses);
       this.grupExpensesByMonth();
       // if(this.searchValue) {
       //   this.onSearch(this.searchValue);
@@ -92,7 +92,6 @@ export class ReportComponent {
       x['totalSavings'] = savings?.reduce((sum: any, item: any) => sum + (item.amount || 0), 0) || 0;
     })
     this.groupedExpenses = data;
-    console.log(this.groupedExpenses)    
   }
 
   grupIncomesByMonth() {
@@ -116,13 +115,11 @@ export class ReportComponent {
       x['totalIncome'] = x.incomes?.reduce((sum: any, item: any) => sum + (item.amount || 0), 0) || 0; 
     })
     this.groupedIncomes = data;
-    console.log('groupedIncomes', this.allIncomes, groupedIncomes, this.groupedIncomes)    
   }
 
   getTopSpending(expenses: any[]) {
     let sortedExpenses = expenses.sort((a, b) => b.amount - a.amount);
     sortedExpenses = sortedExpenses.filter(expense => expense.type.type != 'savings' && expense.type.type != 'emi' && expense.type.type != 'pocketMoney'); 
-    console.log('sortedExpenses', sortedExpenses);
     return sortedExpenses[0];
   }
 

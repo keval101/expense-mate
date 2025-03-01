@@ -35,6 +35,7 @@ export class TransactionsComponent {
   selectedItem: any = {};
   isDelete = false;
   searchValue = '';
+  selectedMonths: any[] = [];
 
 
     @HostListener('window:resize', ['$event'])
@@ -53,6 +54,7 @@ export class TransactionsComponent {
   ngOnInit() {
     this.authService.getCurrentUserDetail().then(user => {
       this.user = user;
+      this.selectedMonths = [this.datepipe.transform(new Date(), 'MMM, yyyy')];
       this.getExpenses();
     })
   }
@@ -85,42 +87,49 @@ export class TransactionsComponent {
       : '/icons/others.svg';
   }
 
-  onFilteration(filterValue: any) {
+  async onFilteration(filterValue: any) {
     this.filterValue = filterValue;
+    this.selectedMonths = filterValue.month;
+    this.getExpenses(true);
+  }
+
+  filterData() {
     this.expenses = this.allExpenses.filter(expense => {
       let isValid = true;
 
-      if (filterValue.month.length) {
-        isValid = isValid && filterValue.month.includes(expense.month);
+      if (this.filterValue.month.length) {
+        isValid = isValid && this.filterValue.month.includes(expense.month);
       }
     
-      if (filterValue.type.length) {
-        isValid = isValid && filterValue.type.includes(expense.type.type); 
+      if (this.filterValue.type.length) {
+        isValid = isValid && this.filterValue.type.includes(expense.type.type); 
       }
     
       return isValid;
     })
 
-    if(filterValue.topSpending) {
+    if(this.filterValue.topSpending) {
       this.expenses = this.allExpenses.sort((a, b) => (b.amount || 0) - (a.amount || 0));
     }
 
     this.setTotalExpense();
   }
 
-  getExpenses() {
+  getExpenses(filter = false) {
     this.isLoading = true;
-    const month = this.datepipe.transform(new Date(), 'MMM, yyyy')
-    this.dataService.getExpenses(this.user.id, month).subscribe(expenses => {
+    this.dataService.getExpenses(this.user.id, this.selectedMonths).subscribe(expenses => {
       this.isLoading = false;
       this.expenses = expenses;
       this.allExpenses = JSON.parse(JSON.stringify(expenses));
-      const month = this.datepipe.transform(new Date(), 'MMM, yyyy')
       this.filterValue = {
-        month: [month],
+        month: this.selectedMonths,
       };
       if(this.searchValue) {
         this.onSearch(this.searchValue);
+      }
+
+      if(filter) {
+        this.filterData();
       }
       this.setTotalExpense();
     })

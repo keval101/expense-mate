@@ -22,6 +22,7 @@ export class DashboardComponent {
   totalExpense = 0;
   balance = 0;
   isLoading = true;
+  month: any[] = [];
   constructor(
     private authService: AuthService,
     private dataService: DataService,
@@ -32,22 +33,22 @@ export class DashboardComponent {
     this.authService.getCurrentUserDetail().then((user) => {
       this.user = user;
       this.name = this.user.first_name + ' ' + this.user.last_name;
+      const month = this.datepipe.transform(new Date(), 'MMM, yyyy');
+      this.month = [month];
       this.getIncomes();
       this.getExpenses();
     });
   }
 
   getIncomes() {
-    const month = this.datepipe.transform(new Date(), 'MMM, yyyy');
-    this.dataService.getIncomes(this.user.id, month).subscribe((incomes) => {
+    this.dataService.getIncomes(this.user.id, this.month).subscribe((incomes) => {
       this.incomes = incomes;
       this.setBalance();
     });
   }
 
   getExpenses() {
-    const month = this.datepipe.transform(new Date(), 'MMM, yyyy');
-    this.dataService.getExpenses(this.user.id, month).subscribe(expenses => {
+    this.dataService.getExpenses(this.user.id, this.month).subscribe(expenses => {
       this.expenses = expenses;
       this.setBalance();
     })
@@ -57,7 +58,7 @@ export class DashboardComponent {
     this.totalIncome = this.incomes?.reduce((sum, item) => sum + (item.amount || 0), 0) || 0;
     this.totalExpense = this.expenses?.reduce((sum, item) => sum + (item.amount || 0), 0) || 0;
     await this.dataService.updateUserRemainingBalance()
-    this.balance = this.user.remainingBalance;
+    this.balance = this.user.remainingBalance ?? 0;
     this.isLoading = false;
   }
 

@@ -50,7 +50,6 @@ export class ExpenseTypesCreateComponent implements OnInit {
   }
 
   getExpenseTypeDetail() {
-    console.log(this.id)
     this.dataService.getExpenseTypeDetail(this.id).then((data) => {
       this.expenseType = data;
       this.form.patchValue(this.expenseType);

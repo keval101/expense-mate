@@ -14,53 +14,57 @@
         </div>
     </div>
 
-    <p-accordion>
-        @for(item of groupedExpenses; track item) {
-            <p-accordion-panel value="0">
-                <p-accordion-header>{{item?.month}}</p-accordion-header>
-                <p-accordion-content>
-
-                    <div class="mb-8">
-                        <p class="title mb-0">Overview</p>
-
-                        <div class="overview">
-                            <div class="overview__card">
-                                <p class="overview__card-title">Incomes</p>
-                                <p class="overview__card-value income">{{getMonthIncome(item?.month) | currency: 'INR'}}</p>
-                            </div>
-                            <div class="overview__card">
-                                <p class="overview__card-title">Expenses</p>
-                                <p class="overview__card-value expense">{{(item?.totalExpense || 0) | currency: 'INR'}}</p>
-                            </div>
-                            <div class="overview__card">
-                                <p class="overview__card-title">Balance</p>
-                                <p class="overview__card-value balance">{{((getMonthIncome(item?.month) - item?.totalExpense) || 0) | currency: 'INR'}}</p>
-                            </div>
-                            <div class="overview__card">
-                                <p class="overview__card-title">Savings</p>
-                                <p class="overview__card-value savings">{{(item?.totalSavings || '') | currency: 'INR'}}</p>
+    @if(isLoading) {
+        <app-spinner></app-spinner>
+    } @else {
+        <p-accordion>
+            @for(item of groupedExpenses; track item) {
+                <p-accordion-panel value="0">
+                    <p-accordion-header>{{item?.month}}</p-accordion-header>
+                    <p-accordion-content>
+    
+                        <div class="mb-8">
+                            <p class="title mb-0">Overview</p>
+    
+                            <div class="overview">
+                                <div class="overview__card">
+                                    <p class="overview__card-title">Incomes</p>
+                                    <p class="overview__card-value income">{{getMonthIncome(item?.month) | currency: 'INR'}}</p>
+                                </div>
+                                <div class="overview__card">
+                                    <p class="overview__card-title">Expenses</p>
+                                    <p class="overview__card-value expense">{{(item?.totalExpense || 0) | currency: 'INR'}}</p>
+                                </div>
+                                <div class="overview__card">
+                                    <p class="overview__card-title">Balance</p>
+                                    <p class="overview__card-value balance">{{((getMonthIncome(item?.month) - item?.totalExpense) || 0) | currency: 'INR'}}</p>
+                                </div>
+                                <div class="overview__card">
+                                    <p class="overview__card-title">Savings</p>
+                                    <p class="overview__card-value savings">{{(item?.totalSavings || '') | currency: 'INR'}}</p>
+                                </div>
                             </div>
                         </div>
-                    </div>
-
-                    <div>
-                        <p class="title mb-0">Top Spending</p>
-                        
-                        <div class="report__card">
-                            <div class="report__card-image">
-                                <img [src]="getIcon(item?.topSpending?.type?.type)" alt="">
+    
+                        <div>
+                            <p class="title mb-0">Top Spending</p>
+                            
+                            <div class="report__card">
+                                <div class="report__card-image">
+                                    <img [src]="getIcon(item?.topSpending?.type?.type)" alt="">
+                                </div>
+                                <div class="report__card-info">
+                                    <p class="name">{{item?.topSpending?.name}}</p>
+                                    <p class="date">{{item?.topSpending?.date}}</p>
+                                </div>
+                                <p class="report__card-money green">{{item?.topSpending?.amount | currency: 'INR'}}</p>
                             </div>
-                            <div class="report__card-info">
-                                <p class="name">{{item?.topSpending?.name}}</p>
-                                <p class="date">{{item?.topSpending?.date}}</p>
-                            </div>
-                            <p class="report__card-money green">{{item?.topSpending?.amount | currency: 'INR'}}</p>
                         </div>
-                    </div>
-                </p-accordion-content>
-            </p-accordion-panel>
-        }
-    </p-accordion>
+                    </p-accordion-content>
+                </p-accordion-panel>
+            }
+        </p-accordion>
+    }
     <!-- <div class="report__card">
         <div class="report__card-header">
             Feb, 2025

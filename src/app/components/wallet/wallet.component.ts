@@ -5,10 +5,12 @@ import { DataService } from '../../shared/services/data.service';
 import { RouterModule } from '@angular/router';
 import { ToastService } from '../../shared/services/toast.service';
 import { SharedModule } from '../../shared/shared.module';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-wallet',
-  imports: [CommonModule, RouterModule, SharedModule],
+  imports: [CommonModule, RouterModule, SharedModule, MultiSelectModule, FormsModule],
   providers: [DatePipe],
   templateUrl: './wallet.component.html',
   styleUrl: './wallet.component.scss',
@@ -20,6 +22,8 @@ export class WalletComponent {
   totalIncome: number = 0;
   selectedItem: any;
   isDelete = false
+  months = ['Jan, 2025', 'Feb, 2025', 'Mar, 2025', 'Apr, 2025', 'May, 2025', 'Jun, 2025', 'Jul, 2025', 'Aug, 2025', 'Sep, 2025', 'Oct, 2025', 'Nov, 2025', 'Dec, 2025'];
+  selectedMonth: any;
   constructor(
     private datepipe: DatePipe,
     private dataService: DataService,
@@ -29,18 +33,23 @@ export class WalletComponent {
     this.authService.getCurrentUserDetail().then((user) => {
       this.user = user;
       this.totalIncome = this.user.remainingBalance;
+      const month = this.datepipe.transform(new Date(), 'MMM, yyyy');
+      this.selectedMonth = [month];
       this.getIncomes();
     });
   }
 
   getIncomes() {
     this.isLoading = true;
-    const month = this.datepipe.transform(new Date(), 'MMM, yyyy');
-    this.dataService.getIncomes(this.user.id, month).subscribe((incomes) => {
+    if(this.selectedMonth.length === 0) {
       this.isLoading = false;
-      this.incomes = incomes;
-      // this.totalIncome = this.incomes?.reduce((sum, item) => sum + (item.amount || 0), 0) || 0;
-    });
+      this.incomes = [];
+    } else {
+      this.dataService.getIncomes(this.user.id, this.selectedMonth).subscribe((incomes) => {
+        this.isLoading = false;
+        this.incomes = incomes;
+      });
+    }
   }
 
   async deleteIncome(item: any) {

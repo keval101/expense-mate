@@ -6,7 +6,12 @@
 
 <div class="section-content wallet">
     <div class="wallet__balanace">
-        <p>Availalbe Balance: <span>{{totalIncome | currency:'INR'}}</span></p>
+        <p>Availalbe Wallet: <span>{{totalIncome | currency:'INR'}}</span></p>
+    </div>
+
+    <div class="form__group">
+        <label for="type">Month</label>
+        <p-multiselect [options]="months" placeholder="Month" [(ngModel)]="selectedMonth" (onSelectAllChange)="getIncomes()" (onChange)="getIncomes()"/>
     </div>
 
     <!-- <p class="title">Income history</p> -->

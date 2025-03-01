@@ -60,7 +60,6 @@ export class IncomeCreateComponent {
   }
 
   getExpenseDetail() {
-    console.log(this.id)
     this.dataService.getExpenseDetail(this.id).then((data) => {
       this.income = data?.data();
       this.form.patchValue(this.income)
