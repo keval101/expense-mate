@@ -110,7 +110,8 @@ export class TransactionsComponent {
 
   getExpenses() {
     this.isLoading = true;
-    this.dataService.getExpenses(this.user.id).subscribe(expenses => {
+    const month = this.datepipe.transform(new Date(), 'MMM, yyyy')
+    this.dataService.getExpenses(this.user.id, month).subscribe(expenses => {
       this.isLoading = false;
       this.expenses = expenses;
       this.allExpenses = JSON.parse(JSON.stringify(expenses));

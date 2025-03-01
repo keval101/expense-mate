@@ -17,7 +17,7 @@ export class AppComponent implements OnInit{
   title = 'expense-mate';
   isShowToast = false;
   toast: any = {};
-  routes: string[] = ['login'];
+  routes: string[] = ['', 'login'];
   needSidebar = false;
 
   constructor(
@@ -43,6 +43,7 @@ export class AppComponent implements OnInit{
   }
 
   onActivate(event: any) {
-    this.needSidebar = !this.routes.includes(event.url);
+    const url = this.router.url.replaceAll('/', '');
+    this.needSidebar = !this.routes.includes(url);
   }
 }

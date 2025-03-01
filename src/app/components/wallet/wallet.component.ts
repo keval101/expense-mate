@@ -28,6 +28,7 @@ export class WalletComponent {
   ) {
     this.authService.getCurrentUserDetail().then((user) => {
       this.user = user;
+      this.totalIncome = this.user.remainingBalance;
       this.getIncomes();
     });
   }
@@ -38,7 +39,7 @@ export class WalletComponent {
     this.dataService.getIncomes(this.user.id, month).subscribe((incomes) => {
       this.isLoading = false;
       this.incomes = incomes;
-      this.totalIncome = this.incomes?.reduce((sum, item) => sum + (item.amount || 0), 0) || 0;
+      // this.totalIncome = this.incomes?.reduce((sum, item) => sum + (item.amount || 0), 0) || 0;
     });
   }
 

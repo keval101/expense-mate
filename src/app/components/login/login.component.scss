@@ -4,16 +4,21 @@
     padding-bottom: 20px;
 
     &__header {
-        @apply relative;
+        @apply relative flex justify-center items-center flex-grow;
         background-size: cover;
         padding-top: 80px;
         background-image: url('./../../../../public/images/man-bg.svg');
         background-repeat: no-repeat;
         background-position: bottom;
         transition: all 0.3s ease-in-out;
+        height: 50vh;
+
+        img {
+            height: 51vh;
+        }
 
         &.hide {
-            transform: translateY(-100%);
+            transform: translateY(-120%);
             position: absolute;
             top: 0;
             transition: all 0.3s ease-in-out;

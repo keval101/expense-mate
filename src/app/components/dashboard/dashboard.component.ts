@@ -46,16 +46,18 @@ export class DashboardComponent {
   }
 
   getExpenses() {
-    this.dataService.getExpenses(this.user.id).subscribe(expenses => {
+    const month = this.datepipe.transform(new Date(), 'MMM, yyyy');
+    this.dataService.getExpenses(this.user.id, month).subscribe(expenses => {
       this.expenses = expenses;
       this.setBalance();
     })
   }
 
-  setBalance() {
+  async setBalance() {
     this.totalIncome = this.incomes?.reduce((sum, item) => sum + (item.amount || 0), 0) || 0;
     this.totalExpense = this.expenses?.reduce((sum, item) => sum + (item.amount || 0), 0) || 0;
-    this.balance = this.totalIncome - this.totalExpense;    
+    await this.dataService.updateUserRemainingBalance()
+    this.balance = this.user.remainingBalance;
     this.isLoading = false;
   }
 

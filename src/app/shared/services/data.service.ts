@@ -1,6 +1,11 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { map } from 'rxjs';
+import { AuthService } from './auth.service';
+
+interface Transaction {
+  amount: number;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -8,9 +13,50 @@ import { map } from 'rxjs';
 export class DataService {
 
   constructor(
-    private fireStore: AngularFirestore
+    private fireStore: AngularFirestore,
+    private authService: AuthService
   ) { }
 
+  async updateUserRemainingBalance() {
+    const user = await this.authService.getCurrentUserDetail();
+    // const remainingBalance = (user?.totalIncome ?? 0) - (user?.totalExpense ?? 0);
+    // return this.fireStore.collection('users').doc(user.id).update({ remainingBalance });
+    try {
+      // Calculate totals from income collection
+      const incomeSnapshot = await this.fireStore
+        .collection(`users/${user.id}/incomes`)
+        .get()
+        .toPromise();
+      
+      const totalIncome = incomeSnapshot?.docs
+        .map(doc => (doc.data() as Transaction)['amount'] || 0) // Replace 'amount' with your field name
+        .reduce((sum, amount) => sum + amount, 0);
+
+      // Calculate totals from expense collection
+      const expenseSnapshot = await this.fireStore
+        .collection(`users/${user.id}/expenses`)
+        .get()
+        .toPromise();
+      
+      const totalExpense = expenseSnapshot?.docs
+        .map(doc => (doc.data() as Transaction)['amount'] || 0) // Replace 'amount' with your field name
+        .reduce((sum, amount) => sum + amount, 0);
+
+      const remainingBalance = (totalIncome ?? 0) - (totalExpense ?? 0);
+      // Update user document with totals
+      await this.fireStore
+        .collection('users')
+        .doc(user.id)
+        .update({
+          totalIncome,
+          totalExpense,
+          remainingBalance,
+        });
+    } catch (error) {
+      console.error('Error updating totals:', error);
+      throw error;
+    }
+  }
 
   getExpenseTypes(userId: string) {
     return this.fireStore.collection('types').snapshotChanges()
@@ -41,13 +87,16 @@ export class DataService {
     }
   }
   
-  deleteExpenseType(id: string) {
+  async deleteExpenseType(id: string) {
     return this.fireStore.collection('types').doc(id).delete();
   }
 
-
-  getExpenses(userId: string) {
-    return this.fireStore.collection('expenses').snapshotChanges()
+  getExpenses(userId: string, month?: any) {
+    let query = this.fireStore.collection('users').doc(userId).collection('expenses');
+    if(month) {
+      query = this.fireStore.collection('users').doc(userId).collection('expenses', ref => ref.where('month', '==', month));
+    }
+    return query.snapshotChanges()
     .pipe(
       map((actions) => {
         const expenses = actions.map((a) => {
@@ -69,19 +118,20 @@ export class DataService {
   async saveExpense(payload: any, id?: any) {
     if(id) {
       const response = await this.fireStore.collection('users').doc(payload.user.id).collection('expenses').doc(id).update(payload);
+      await this.updateUserRemainingBalance();
       return this.fireStore.collection('expenses').doc(id).update(payload);
     } else {
       const response = await this.fireStore.collection('users').doc(payload.user.id).collection('expenses').add(payload);
+      await this.updateUserRemainingBalance();
       return this.fireStore.collection('expenses').doc(response.id).set(payload);
     }
   }
 
   async deleteExpense(id: string, userId: string) {
     await this.fireStore.collection('users').doc(userId).collection('expenses').doc(id).delete();
-    await this.fireStore.collection('expenses').doc(id).delete();
+    const expense =await this.fireStore.collection('expenses').doc(id).delete();
+    await this.updateUserRemainingBalance();
   }
-
-
 
   getIncomes(userId: string, month?: any) {
     let query = this.fireStore.collection('users').doc(userId).collection('incomes');
@@ -108,9 +158,11 @@ export class DataService {
   async saveIncome(payload: any, id?: any) {
     if(id) {
       const response = await this.fireStore.collection('users').doc(payload.user.id).collection('incomes').doc(id).update(payload);
+      await this.updateUserRemainingBalance();
       return this.fireStore.collection('incomes').doc(id).update(payload);
     } else {
       const response = await this.fireStore.collection('users').doc(payload.user.id).collection('incomes').add(payload);
+      await this.updateUserRemainingBalance();
       return this.fireStore.collection('incomes').doc(response.id).set(payload);
     }
   }
@@ -118,5 +170,6 @@ export class DataService {
   async deleteIncome(id: string, userId: string) {
     await this.fireStore.collection('users').doc(userId).collection('incomes').doc(id).delete();
     await this.fireStore.collection('incomes').doc(id).delete();
+    await this.updateUserRemainingBalance();
   }
 }
