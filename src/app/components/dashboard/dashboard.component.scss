@@ -72,3 +72,9 @@
 .transactions-container {
     margin-top: 90px;
 }
+
+.current-month {
+    @apply rounded-full px-3 py-1 text-xs;
+    color: #fff;
+    background-color: rgba(255, 255, 255, 0.15);
+}

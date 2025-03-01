@@ -97,18 +97,18 @@ export class TransactionsComponent {
     this.expenses = this.allExpenses.filter(expense => {
       let isValid = true;
 
-      if (this.filterValue.month.length) {
+      if (this.filterValue?.month?.length) {
         isValid = isValid && this.filterValue.month.includes(expense.month);
       }
     
-      if (this.filterValue.type.length) {
+      if (this.filterValue?.type?.length) {
         isValid = isValid && this.filterValue.type.includes(expense.type.type); 
       }
     
       return isValid;
     })
 
-    if(this.filterValue.topSpending) {
+    if(this.filterValue?.topSpending) {
       this.expenses = this.allExpenses.sort((a, b) => (b.amount || 0) - (a.amount || 0));
     }
 
@@ -130,6 +130,7 @@ export class TransactionsComponent {
 
       if(filter) {
         this.filterData();
+
       }
       this.setTotalExpense();
     })

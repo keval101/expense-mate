@@ -23,6 +23,7 @@ export class DashboardComponent {
   balance = 0;
   isLoading = true;
   month: any[] = [];
+  currentDate = new Date();
   constructor(
     private authService: AuthService,
     private dataService: DataService,

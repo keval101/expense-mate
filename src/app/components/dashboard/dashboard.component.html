@@ -4,9 +4,9 @@
     <p class="username">{{ name }}</p>
   </div>
 
-  <div class="dashboard__card">
+  <div class="dashboard__card relative">
     <div>
-      <p class="total">Wallet</p>
+      <p class="total flex">Wallet <span class="inline-flex current-month ml-auto">{{currentDate | date: 'MMM, yyyy'}}</span></p>
       <p class="balance w-fit">
         @if(isLoading) {
           <app-spinner></app-spinner>
