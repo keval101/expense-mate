@@ -5,9 +5,21 @@
         </div>
         <p class="profile__name">{{user?.first_name}} {{user?.last_name}}</p>
 
-        <div class="profile__stats flex items-center gap-4">
-            <div class="flex items-center gap-4"><img src="/icons/arrow-up-green.svg" alt="arrow-up-green"> {{user?.totalIncome | number}} <div>
-            <div class="flex items-center gap-4"><img src="/icons/arrow-down-red.svg" alt="arrow-up-green"> {{user?.totalExpense | number}}</div>
+        <div class="profile__stats flex items-center gap-6">
+            <div class="flex items-center gap-2">
+                <img src="/icons/arrow-up-green.svg" alt="arrow-up-green" height="42px"> 
+                <div>
+                    <p class="mb-0 card-title">Income</p>
+                    <p class="mb-0 card-amount">{{user?.totalIncome | number}}</p>
+                </div> 
+            </div>
+
+            <div class="flex items-center gap-2"><img src="/icons/arrow-down-red.svg" alt="arrow-up-green" height="42px">
+                <div>
+                    <p class="mb-0 card-title">Expense</p>
+                    <p class="mb-0 card-amount">{{user?.totalExpense | number}}</p>
+                </div> 
+            </div>
         </div>
     </div>
 </div>

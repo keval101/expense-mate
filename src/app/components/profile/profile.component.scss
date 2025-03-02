@@ -32,5 +32,19 @@
 
     &__stats {
         @apply mt-8 p-4 rounded-md bg-white;
+
+        img {
+            height: 42px;
+        }
+
+        .card-title {
+            @apply text-gray-500;
+            font-size: 12px;
+        }
+
+        .card-amount {
+            @apply font-semibold;
+            font-size: 22px;
+        }
     }
 }
