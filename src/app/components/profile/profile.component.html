@@ -1,0 +1,13 @@
+<div class="profile">
+    <div class="profile__container">
+        <div class="profile__image">
+            <img src="/images/user.png" alt="user">
+        </div>
+        <p class="profile__name">{{user?.first_name}} {{user?.last_name}}</p>
+
+        <div class="profile__stats flex items-center gap-4">
+            <div class="flex items-center gap-4"><img src="/icons/arrow-up-green.svg" alt="arrow-up-green"> {{user?.totalIncome | number}} <div>
+            <div class="flex items-center gap-4"><img src="/icons/arrow-down-red.svg" alt="arrow-up-green"> {{user?.totalExpense | number}}</div>
+        </div>
+    </div>
+</div>

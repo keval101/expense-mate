@@ -60,7 +60,9 @@ export class TransactionsCreateComponent implements OnInit {
 
     this.route.params.subscribe(params => {
       this.id = params['id'];
-      this.getExpenseDetail();
+      if(this.id) {
+        this.getExpenseDetail();
+      }
     });
   }
 

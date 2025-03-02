@@ -10,6 +10,7 @@ import { WalletComponent } from './components/wallet/wallet.component';
 import { ExpenseTypesCreateComponent } from './components/expense-types/expense-types-create/expense-types-create.component';
 import { IncomeCreateComponent } from './components/wallet/income-create/income-create.component';
 import { ReportComponent } from './components/report/report.component';
+import { ProfileComponent } from './components/profile/profile.component';
 
 export const routes: Routes = [
     {
@@ -73,6 +74,11 @@ export const routes: Routes = [
     {
         path: 'reports',
         component: ReportComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'profile',
+        component: ProfileComponent,
         canActivate: [AuthGuard]
     },
 ];
