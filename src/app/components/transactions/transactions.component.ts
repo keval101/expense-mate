@@ -155,7 +155,8 @@ export class TransactionsComponent {
     this.isDelete = false;
   }
 
-  setSelectedItem(item: any) {
+  setSelectedItem(item: any, event: Event) {
+    event.stopPropagation();
     this.selectedItem = item;
     this.isDelete = true;
   }

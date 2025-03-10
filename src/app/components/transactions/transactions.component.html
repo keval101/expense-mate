@@ -27,7 +27,7 @@
     } @else {
     @for(item of expenses; track item) {
     <div class="transactions__card cursor-pointer" [routerLink]="['/expenses/edit', item.id]">
-        <button (click)="setSelectedItem(item)" class="close-btn"><img src="/icons/close-red.svg" alt=""></button>
+        <button (click)="setSelectedItem(item, $event)" class="close-btn"><img src="/icons/close-red.svg" alt=""></button>
         <div class="transactions__card-image">
             <img [src]="getIcon(item?.type?.type)" alt="">
         </div>
