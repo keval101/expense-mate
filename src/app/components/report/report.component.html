@@ -19,7 +19,7 @@
     } @else {
         <p-accordion>
             @for(item of groupedExpenses; track item) {
-                <p-accordion-panel value="0">
+                <p-accordion-panel [value]="$index">
                     <p-accordion-header>{{item?.month}}</p-accordion-header>
                     <p-accordion-content>
     
