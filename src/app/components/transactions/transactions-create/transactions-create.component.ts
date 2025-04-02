@@ -88,7 +88,8 @@ export class TransactionsCreateComponent implements OnInit {
       ...this.form.value,
       user: this.user,
       date: this.datepipe.transform(this.form.value.date, 'MMM dd, yyyy'),
-      month: this.datepipe.transform(this.form.value.date, 'MMM, yyyy')
+      month: this.datepipe.transform(this.form.value.date, 'MMM, yyyy'),
+      time: this.expense?.time ? this.expense?.time : new Date().getTime()
     }
     this.dataService.saveExpense(payload, this.id).then((data) => {
       this.toastService.displayToast('success', 'Expense', 'Expense Saved!');

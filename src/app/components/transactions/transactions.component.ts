@@ -121,16 +121,17 @@ export class TransactionsComponent {
       this.isLoading = false;
       this.expenses = expenses;
       this.allExpenses = JSON.parse(JSON.stringify(expenses));
-      this.filterValue = {
-        month: this.selectedMonths,
-      };
+
       if(this.searchValue) {
         this.onSearch(this.searchValue);
       }
 
       if(filter) {
         this.filterData();
-
+      } else {
+        this.filterValue = {
+          month: this.selectedMonths,
+        };
       }
       this.setTotalExpense();
     })
@@ -170,7 +171,7 @@ export class TransactionsComponent {
     this.expenses = this.expenses.sort((a, b) => {
       const dateA = new Date(a.date);
       const dateB = new Date(b.date);
-      return dateB.getTime() - dateA.getTime();
+      return (b?.time || dateB) - (a?.time || dateA)
     });
   }
 }
