@@ -25,11 +25,15 @@ export class SidebarComponent implements OnInit {
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
-    this.setSidebarPosition();
+    if(window.innerWidth < 600) {
+      this.setSidebarPosition();
+    }
   }
 
   ngOnInit(): void {
-      this.setSidebarPosition();
+      if(window.innerWidth < 600) {
+        this.setSidebarPosition();
+      }
       this.isDashboard = this.router.url === '/dashboard';
 
       this.router.events.subscribe(event => {
@@ -38,6 +42,7 @@ export class SidebarComponent implements OnInit {
   }
 
   setSidebarPosition(): void { 
+    console.log('hello')
     const mobileContainer = document.querySelector('.mobile-container') as HTMLElement;
     const sidebar = document.querySelector('.sidebar') as HTMLElement;
     if (mobileContainer && sidebar) {
