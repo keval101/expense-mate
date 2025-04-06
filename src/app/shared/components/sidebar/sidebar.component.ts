@@ -25,11 +25,19 @@ export class SidebarComponent implements OnInit {
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
-    this.setSidebarPosition();
+    if(window.innerWidth < 600) {
+      this.setSidebarPosition();
+    } else {
+      this.isShowSidebar = true;
+    }
   }
 
   ngOnInit(): void {
-      this.setSidebarPosition();
+      if(window.innerWidth < 600) {
+        this.setSidebarPosition();
+      } else {
+        this.isShowSidebar = true;
+      }
       this.isDashboard = this.router.url === '/dashboard';
 
       this.router.events.subscribe(event => {
@@ -55,9 +63,12 @@ export class SidebarComponent implements OnInit {
   }
 
   hideSidebar() {
-    this.isShowSidebar = false;
-    if (this.checkboxRef) {
-      this.checkboxRef.nativeElement.checked = false;
+    if(window.innerWidth < 600) {
+      this.isShowSidebar = false;
+
+      if (this.checkboxRef) {
+        this.checkboxRef.nativeElement.checked = false;
+      }
     }
   }
 

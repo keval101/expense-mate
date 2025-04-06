@@ -16,6 +16,14 @@
         transform: translateX(0);
         opacity: 1;
         transition: all 0.3s ease-in-out;
+
+
+      @media screen and (min-width: 450px) {
+        position: relative;
+        transform: translateX(0);
+        opacity: 1;
+        transition: all 0.3s ease-in-out;
+      }
     }
 
     &__header {
@@ -75,6 +83,11 @@
     cursor: pointer;
     position: absolute;
     right: 20px;
+    display: inline-block;
+ 
+    @media screen and (min-width: 600px) {
+      display: none;
+    }
   }
   
   .hamburger input {

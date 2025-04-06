@@ -29,7 +29,7 @@
     </form>
 </div>
 
-<button class="form__btn" [disabled]="!form.valid" (click)="submitExpense()">
+<button class="form__btn create__btn" [disabled]="!form.valid" (click)="submitExpense()">
     @if(isLoading) {
     <app-spinner></app-spinner>
     } @else {

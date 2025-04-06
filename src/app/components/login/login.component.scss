@@ -3,6 +3,21 @@
 .login {
     padding-bottom: 20px;
 
+    &.login_bg {
+        @media screen and (max-width: 450px) {
+            @apply flex justify-center items-center flex-col w-full h-full;
+        }
+    }
+    
+    @media screen and (min-width: 450px) {
+        @apply m-auto shadow-lg rounded-2xl bg-white absolute pb-20;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 500px;
+        height: auto;
+    }
+
     &__header {
         @apply relative flex justify-center items-center flex-grow;
         background-size: cover;
@@ -13,12 +28,19 @@
         transition: all 0.3s ease-in-out;
         height: 50vh;
 
+        @media screen and (min-width: 450px) {
+            @apply rounded-t-2xl;
+        }
+
         img {
             height: 51vh;
+            @media screen and (min-width: 450px) {
+                height: 100%;
+            }
         }
 
         &.hide {
-            transform: translateY(-120%);
+            transform: translateY(-150%);
             position: absolute;
             top: 0;
             transition: all 0.3s ease-in-out;
@@ -27,7 +49,7 @@
 
     &__title {
         @apply font-bold text-center capitalize mt-8;
-        font-size: 36px;
+        font-size: 28px;
         color: $primary;
         transition: all 0.3s ease-in-out;
     }

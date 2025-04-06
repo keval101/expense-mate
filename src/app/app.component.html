@@ -4,5 +4,10 @@
     @if(needSidebar) {
         <app-sidebar></app-sidebar>
     }
-    <router-outlet (activate)="onActivate($event)"></router-outlet>
+    <div class="w-full desktop-container">
+        <div class="sm:shadow-xl sm:h-full">
+            <router-outlet (activate)="onActivate($event)"></router-outlet>
+        </div>
+    </div>
+    <!-- <router-outlet (activate)="onActivate($event)"></router-outlet> -->
 </div>

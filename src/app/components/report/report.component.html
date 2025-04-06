@@ -29,7 +29,7 @@
                             <div class="overview">
                                 <div class="overview__card">
                                     <p class="overview__card-title">Incomes</p>
-                                    <p class="overview__card-value income">{{getMonthIncome(item?.month) | currency: 'INR'}}</p>
+                                    <p class="overview__card-value income">{{(getMonthIncome(item?.month) || 0) | currency: 'INR'}}</p>
                                 </div>
                                 <div class="overview__card">
                                     <p class="overview__card-title">Expenses</p>
@@ -41,7 +41,7 @@
                                 </div>
                                 <div class="overview__card">
                                     <p class="overview__card-title">Savings</p>
-                                    <p class="overview__card-value savings">{{(item?.totalSavings || '') | currency: 'INR'}}</p>
+                                    <p class="overview__card-value savings">{{(item?.totalSavings || 0) | currency: 'INR'}}</p>
                                 </div>
                             </div>
                         </div>
