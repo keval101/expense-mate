@@ -112,5 +112,11 @@
         justify-content: flex-start;
         padding: 24px;
         height: auto;
+
+        @media screen and (min-width: 450px) {
+            width: 50% !important;
+            left: 50% !important;
+            transform: translateX(-50%) !important; 
+        }
     }
 }

@@ -11,6 +11,10 @@
     &__card {
         @apply flex items-center gap-4 px-2 py-3 bg-gray-50 rounded-2xl;
 
+        @media screen and (min-width: 450px) {
+            @apply bg-white;
+        }
+
         &:not(:last-child) {
             margin-bottom: 8px;
         }

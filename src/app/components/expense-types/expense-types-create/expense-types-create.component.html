@@ -13,7 +13,7 @@
   </form>
 </div>
 
-<button class="form__btn" [disabled]="!form.valid" (click)="saveExpenseType()">
+<button class="form__btn create__btn" [disabled]="!form.valid" (click)="saveExpenseType()">
   @if(isLoading) {
   <app-spinner></app-spinner>
   } @else { Submit }

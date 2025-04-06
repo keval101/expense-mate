@@ -1,14 +1,22 @@
-<div class="login">
+<div class="login" [class.login_bg]="isGetStarted">
     <div class="login__header" [class.hide]="isGetStarted">
         <img src="/images/man.png" alt="man">
     </div>
 
     <p class="login__title">
-        spend smarter <br> save more
+        <!-- spend smarter <br> save more -->
+        @if(isLogin) {
+            Ready to Spend Smarter? <br>
+            <span class="text-sm flex text-center w-full justify-center font-normal ">Spend smarter. Save more.</span> 
+        } @else {
+            Join Expense Mate <br>
+            <span class="text-sm flex text-center w-full justify-center font-normal ">Spend smarter. Save more.</span> 
+
+        }
     </p>
 
     @if(isGetStarted) {
-    <form class="form px-8 mt-8" [formGroup]="form" (ngSubmit)="submit()">
+    <form class="form px-8 mt-8 w-full" [formGroup]="form" (ngSubmit)="submit()">
 
         @if(!isLogin) {
         <div class="form__group">

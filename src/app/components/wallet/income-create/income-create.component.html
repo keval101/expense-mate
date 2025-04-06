@@ -23,7 +23,7 @@
     </form>
 </div>
 
-<button class="form__btn" [disabled]="!form.valid" (click)="submitIncome()">
+<button class="form__btn create__btn" [disabled]="!form.valid" (click)="submitIncome()">
     @if(isLoading) {
     <app-spinner></app-spinner>
     } @else {
