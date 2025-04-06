@@ -25,7 +25,7 @@ export class SidebarComponent implements OnInit {
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
-    if(window.innerWidth < 600) {
+    if(window.innerWidth <= 768) {
       this.setSidebarPosition();
     } else {
       this.isShowSidebar = true;
@@ -33,7 +33,7 @@ export class SidebarComponent implements OnInit {
   }
 
   ngOnInit(): void {
-      if(window.innerWidth < 600) {
+      if(window.innerWidth <= 768) {
         this.setSidebarPosition();
       } else {
         this.isShowSidebar = true;
@@ -63,7 +63,7 @@ export class SidebarComponent implements OnInit {
   }
 
   hideSidebar() {
-    if(window.innerWidth < 600) {
+    if(window.innerWidth <= 768) {
       this.isShowSidebar = false;
 
       if (this.checkboxRef) {

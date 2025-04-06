@@ -1,4 +1,6 @@
 .transactions {
+    height: calc(100vh - 450px);
+    overflow: auto;
     .subtitle {
         transition: all 0.1s ease-in;
 
