@@ -5,7 +5,7 @@
         <app-sidebar></app-sidebar>
     }
     <div class="w-full desktop-container">
-        <div class="sm:shadow-xl sm:h-full">
+        <div [class.sm:shadow-xl]="needSidebar" [class.sm:h-full]="needSidebar">
             <router-outlet (activate)="onActivate($event)"></router-outlet>
         </div>
     </div>
