@@ -72,6 +72,12 @@ export class WalletComponent {
   }
 
   async deleteIncome(item: any) {
+    const wallet = item.wallet;
+    if(wallet) {
+      wallet.balance = wallet.balance - item.amount;
+      await this.dataService.updateWallet(wallet.id, wallet.user.id, wallet.balance);
+    }
+    
     await this.dataService.deleteIncome(item.id, item.user.id)
     this.toastService.displayToast('success', 'Income', 'Income Deleted!'); 
    }

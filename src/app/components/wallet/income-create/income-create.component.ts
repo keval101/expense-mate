@@ -80,7 +80,7 @@ export class IncomeCreateComponent {
     });
   }
 
-  submitIncome() {
+  async submitIncome() {
     this.isLoading = true;
     const payload = {
       ...this.form.value,
@@ -88,6 +88,14 @@ export class IncomeCreateComponent {
       date: this.datepipe.transform(this.form.value.date, 'MMM dd, yyyy'),
       month: this.datepipe.transform(this.form.value.date, 'MMM, yyyy')
     }
+
+    // update wallet balance
+    const wallet = payload.wallet;
+    if(wallet) {
+      wallet.balance = wallet.balance + payload.amount;
+      await this.dataService.updateWallet(wallet.id, wallet.user.id, wallet.balance);
+    }
+
     this.dataService.saveIncome(payload, this.id).then((data) => {
       this.toastService.displayToast('success', 'Income', 'Income Saved!');
       this.isLoading = false;

@@ -64,7 +64,7 @@
 
     @for(item of incomes; track item) {
     <div class="wallet__card cursor-pointer" [routerLink]="['/incomes/edit', item.id]">
-        <button (click)="setSelectedItem(item)" class="close-btn"><img src="/icons/close-red.svg" alt=""></button>
+        <button (click)="setSelectedItem(item); $event.stopPropagation()" class="close-btn"><img src="/icons/close-red.svg" alt=""></button>
 
         <div class="wallet__card-image">
             <img src="/icons/money-bag.svg" alt="">
