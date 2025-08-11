@@ -1,6 +1,6 @@
 <div class="section dashboard">
     <div class="content-padding">
-        <p class="section-title">Add Expense</p>
+        <p class="section-title">Add Income</p>
     </div>
 </div>
 
@@ -14,6 +14,11 @@
         <div class="form__group">
             <label for="amount">Amount<span class="text-red-500">*</span></label>
             <input type="number" id="amount" placeholder="Amount" formControlName="amount">
+        </div>
+
+        <div class="form__group">
+            <label for="wallet">Wallet<span class="text-red-500">*</span></label>
+            <p-select [options]="wallets" placeholder="Wallet" formControlName="wallet" optionLabel="name" optionValue="id" />
         </div>
 
         <div class="form__group">

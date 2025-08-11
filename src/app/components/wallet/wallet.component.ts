@@ -7,6 +7,7 @@ import { ToastService } from '../../shared/services/toast.service';
 import { SharedModule } from '../../shared/shared.module';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { FormsModule } from '@angular/forms';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-wallet',
@@ -24,6 +25,9 @@ export class WalletComponent {
   isDelete = false
   months = ['Jan, 2025', 'Feb, 2025', 'Mar, 2025', 'Apr, 2025', 'May, 2025', 'Jun, 2025', 'Jul, 2025', 'Aug, 2025', 'Sep, 2025', 'Oct, 2025', 'Nov, 2025', 'Dec, 2025'];
   selectedMonth: any;
+  wallets: any[] = [];
+  destroy$ = new Subject<void>();
+
   constructor(
     private datepipe: DatePipe,
     private dataService: DataService,
@@ -36,6 +40,7 @@ export class WalletComponent {
       const month = this.datepipe.transform(new Date(), 'MMM, yyyy');
       this.selectedMonth = [month];
       this.getIncomes();
+      this.getWallets();
     });
   }
 
@@ -50,6 +55,20 @@ export class WalletComponent {
         this.incomes = incomes;
       });
     }
+  }
+  
+  getWallets() {
+    this.dataService.getUserWallets(this.user.id).pipe(takeUntil(this.destroy$)).subscribe((wallets) => {
+      this.wallets = wallets;
+      this.totalIncome = this.wallets.reduce((acc, wallet) => acc + wallet.balance, 0);
+      console.log(this.wallets);
+    });
+  }
+
+  deleteWallet(item: any) {
+    this.dataService.deleteWallet(item.id, item.user.id)
+    this.toastService.displayToast('success', 'Wallet', 'Wallet Deleted!'); 
+    this.getWallets();
   }
 
   async deleteIncome(item: any) {
@@ -73,5 +92,10 @@ export class WalletComponent {
       const dateB = new Date(b.date);
       return dateB.getTime() - dateA.getTime();
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

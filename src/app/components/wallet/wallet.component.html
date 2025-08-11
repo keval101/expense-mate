@@ -5,13 +5,54 @@
 </div>
 
 <div class="section-content wallet">
+
+
     <div class="wallet__balanace">
         <p>Availalbe Wallet: <span>{{totalIncome | currency:'INR'}}</span></p>
     </div>
+    
+    <!-- <p class="title">Income history</p> -->
+    <div class="flex justify-between items-center mb-5">
+        <p class="title !mb-0">Wallets</p>
+        <p class="subtitle cursor-pointer" [routerLink]="['/wallet/add']">Add Wallet</p>
+    </div>
+<!-- 
+    @for(item of wallets; track item) {
+    <div class="wallet__balanace">
+        <p>{{item.balance | currency:'INR'}}</p>
+        <span>{{item.name}}</span>
+    </div>
+    } -->
+
+    <div class="grid mb-10 grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
+            @for(item of wallets; track item) {
+                <div class="wallet-card savings-gradient rounded-xl p-4 text-white cursor-pointer">
+                    <div class="flex items-center space-x-2 mb-4">
+                        <div class="w-8 h-8 bg-white bg-opacity-10 rounded-lg flex items-center justify-center">
+                            @if(item.type === 'bank') { 
+                                <i class="ri-bank-line ri-lg"></i>
+                            } @else {
+                                <i class="ri-cash-fill ri-lg"></i>
+                            }
+                        </div>
+                        <span class="font-medium">{{item.name}}</span>
+                    </div>
+                    <div class="mb-2">
+                        <div class="text-2xl font-bold">{{item.balance | currency:'INR'}}</div>
+                    </div>
+                    <button class="close-btn" (click)="deleteWallet(item)"><img src="/icons/close-red.svg" alt=""></button>
+                </div>
+            }
+    </div>
+
+    @if(!wallets.length) {
+        <p class="text-center mb-20">No Wallets Found!</p>
+    }
 
     <div class="form__group">
         <label for="type">Month</label>
-        <p-multiselect [options]="months" placeholder="Month" [(ngModel)]="selectedMonth" (onSelectAllChange)="getIncomes()" (onChange)="getIncomes()"/>
+        <p-multiselect [options]="months" placeholder="Month" [(ngModel)]="selectedMonth"
+            (onSelectAllChange)="getIncomes()" (onChange)="getIncomes()" />
     </div>
 
     <!-- <p class="title">Income history</p> -->
@@ -38,7 +79,7 @@
 
 
     @if(!incomes.length) {
-    <p class="text-center">No Incomes Found This Month!</p>
+        <p class="text-center">No Incomes Found This Month!</p>
     }
 </div>
 

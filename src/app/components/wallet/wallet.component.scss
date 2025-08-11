@@ -89,3 +89,20 @@
         max-width: 20px;
     }
 }
+
+.savings-gradient {
+    background: linear-gradient(185deg, #63B5AE 0%, #438883 100%);
+}
+
+.wallet-card {
+    position: relative;
+    .close-btn {
+        position: absolute;
+        top: -4px;
+        right: -4px;
+        img {
+            width: 20px;
+            height: 20px;
+        }
+    }
+}

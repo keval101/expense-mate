@@ -8,6 +8,8 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { DrawerModule } from 'primeng/drawer';
 import { TransactionsFilterComponent } from './transactions-filter/transactions-filter.component';
 import { ToastService } from '../../shared/services/toast.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-transactions',
@@ -36,7 +38,7 @@ export class TransactionsComponent {
   isDelete = false;
   searchValue = '';
   selectedMonths: any[] = [];
-
+  destroy$ = new Subject<void>();
 
     @HostListener('window:resize', ['$event'])
     onResize(event: any) {
@@ -117,7 +119,7 @@ export class TransactionsComponent {
 
   getExpenses(filter = false) {
     this.isLoading = true;
-    this.dataService.getExpenses(this.user.id, this.selectedMonths).subscribe(expenses => {
+    this.dataService.getExpenses(this.user.id, this.selectedMonths).pipe(takeUntil(this.destroy$)).subscribe(expenses => {
       this.isLoading = false;
       this.expenses = expenses;
       this.allExpenses = JSON.parse(JSON.stringify(expenses));
@@ -173,5 +175,10 @@ export class TransactionsComponent {
       const dateB = new Date(b.date);
       return (b?.time || dateB) - (a?.time || dateA)
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

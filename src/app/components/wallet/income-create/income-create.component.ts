@@ -8,6 +8,7 @@ import { Subject } from 'rxjs';
 import { AuthService } from '../../../shared/services/auth.service';
 import { DataService } from '../../../shared/services/data.service';
 import { ToastService } from '../../../shared/services/toast.service';
+import { SelectModule } from 'primeng/select';
 
 @Component({
   selector: 'app-income-create',
@@ -16,7 +17,8 @@ import { ToastService } from '../../../shared/services/toast.service';
     ReactiveFormsModule,
     RouterModule,
     SharedModule,
-    DatePickerModule
+    DatePickerModule,
+    SelectModule
   ],
   providers: [DatePipe],
   templateUrl: './income-create.component.html',
@@ -30,7 +32,8 @@ export class IncomeCreateComponent {
   destroy$ = new Subject<void>();
   id: string = '';
   income: any = {}; 
-
+  wallets: any[] = [];
+  selectedWallet: any;
 
   constructor(
     private fb: FormBuilder,
@@ -46,11 +49,13 @@ export class IncomeCreateComponent {
     this.form = this.fb.group({
       name: ['', Validators.required],
       amount: ['', Validators.required],
-      date: ['', Validators.required]
+      date: ['', Validators.required],
+      wallet: ['', Validators.required]
     })
 
     this.authService.getCurrentUserDetail().then(user => {
       this.user = user;
+      this.getWallets(this.user.id);
     })
 
     this.route.params.subscribe(params => {
@@ -59,11 +64,19 @@ export class IncomeCreateComponent {
     });
   }
 
+  getWallets(id: string) {
+    console.log(id);
+    this.dataService.getUserWallets(id).subscribe((wallets) => {
+      this.wallets = wallets;
+      console.log(this.wallets);
+    });
+  }
+
   getExpenseDetail() {
     this.dataService.getExpenseDetail(this.id).then((data) => {
       this.income = data?.data();
       this.form.patchValue(this.income)
-      this.form.get('date')?.setValue(new Date(this.income.date));
+      // this.form.get('date')?.setValue(new Date(this.income.date));
     });
   }
 
