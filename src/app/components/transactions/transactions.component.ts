@@ -38,7 +38,7 @@ export class TransactionsComponent {
   isDelete = false;
   searchValue = '';
   selectedMonths: any[] = [];
-  destroy$ = new Subject<void>();
+  destroy$ = new Subject<boolean>();
 
     @HostListener('window:resize', ['$event'])
     onResize(event: any) {
@@ -121,9 +121,19 @@ export class TransactionsComponent {
     this.isLoading = true;
     this.dataService.getExpenses(this.user.id, this.selectedMonths).pipe(takeUntil(this.destroy$)).subscribe(expenses => {
       this.isLoading = false;
-      this.expenses = expenses;
-      this.allExpenses = JSON.parse(JSON.stringify(expenses));
 
+      setTimeout(() => {
+        this.expenses = expenses.sort((a, b) => {
+          const dateA = new Date(a.date);
+          const dateB = new Date(b.date);
+  
+          return dateB.getTime() - dateA.getTime();
+        });
+
+        this.allExpenses = JSON.parse(JSON.stringify(expenses));
+        this.setTotalExpense();
+
+      }, 0);
       if(this.searchValue) {
         this.onSearch(this.searchValue);
       }
@@ -178,7 +188,7 @@ export class TransactionsComponent {
   }
 
   ngOnDestroy(): void {
-    this.destroy$.next();
+    this.destroy$.next(true);
     this.destroy$.complete();
   }
 }
