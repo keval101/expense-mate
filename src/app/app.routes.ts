@@ -11,6 +11,7 @@ import { ExpenseTypesCreateComponent } from './components/expense-types/expense-
 import { IncomeCreateComponent } from './components/wallet/income-create/income-create.component';
 import { ReportComponent } from './components/report/report.component';
 import { ProfileComponent } from './components/profile/profile.component';
+import { WalletCreateComponent } from './components/wallet/wallet-create/wallet-create.component';
 
 export const routes: Routes = [
     {
@@ -59,6 +60,16 @@ export const routes: Routes = [
     {
         path: 'wallet',
         component: WalletComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'wallet/add',
+        component: WalletCreateComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'wallet/edit/:id',
+        component: WalletCreateComponent,
         canActivate: [AuthGuard]
     },
     {

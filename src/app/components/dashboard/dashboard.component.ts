@@ -4,6 +4,7 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { TransactionsHistoryComponent } from '../transactions-history/transactions-history.component';
 import { DataService } from '../../shared/services/data.service';
 import { SharedModule } from '../../shared/shared.module';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
@@ -24,6 +25,7 @@ export class DashboardComponent {
   isLoading = true;
   month: any[] = [];
   currentDate = new Date();
+  destroy$ = new Subject<void>();
   constructor(
     private authService: AuthService,
     private dataService: DataService,
@@ -42,14 +44,14 @@ export class DashboardComponent {
   }
 
   getIncomes() {
-    this.dataService.getIncomes(this.user.id, this.month).subscribe((incomes) => {
+    this.dataService.getIncomes(this.user.id, this.month).pipe(takeUntil(this.destroy$)).subscribe((incomes) => {
       this.incomes = incomes;
       this.setBalance();
     });
   }
 
   getExpenses() {
-    this.dataService.getExpenses(this.user.id, this.month).subscribe(expenses => {
+    this.dataService.getExpenses(this.user.id, this.month).pipe(takeUntil(this.destroy$)).subscribe(expenses => {
       this.expenses = expenses;
       this.setBalance();
     })
@@ -76,5 +78,10 @@ export class DashboardComponent {
     }
 
     return `${greeting}`;
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

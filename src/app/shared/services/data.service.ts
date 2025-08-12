@@ -172,4 +172,38 @@ export class DataService {
     await this.fireStore.collection('incomes').doc(id).delete();
     await this.updateUserRemainingBalance();
   }
+
+  getUserWallets(userId: string) {
+    return this.fireStore.collection('users').doc(userId).collection('wallets').snapshotChanges()
+    .pipe(
+      map((actions) => {
+        const bankAccounts = actions.map((a) => {
+          const data: any = a.payload.doc.data();
+          const id = a.payload.doc.id;
+          return { ...data, id};
+        });
+        return bankAccounts;
+      })
+    );
+  }
+
+  getWalletDetail(id: string) {
+    return this.fireStore.collection('wallets').doc(id).get().toPromise();
+  }
+
+  saveWallet(payload: any, id?: any) {
+    if(id) {
+      return this.fireStore.collection('users').doc(payload.user.id).collection('wallets').doc(id).update(payload);
+    } else {
+      return this.fireStore.collection('users').doc(payload.user.id).collection('wallets').add(payload);
+    }
+  }
+
+  deleteWallet(id: string, userId: string) {
+    return this.fireStore.collection('users').doc(userId).collection('wallets').doc(id).delete();
+  }
+
+  updateWallet(id: string, userId: string, balance: number) {
+    return this.fireStore.collection('users').doc(userId).collection('wallets').doc(id).update({ balance });
+  }
 }

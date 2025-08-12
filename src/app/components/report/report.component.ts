@@ -5,6 +5,7 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { AccordionModule } from 'primeng/accordion';
 import { ExpenseTypeIcons } from '../../shared/enum/enum';
 import { SharedModule } from '../../shared/shared.module';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-report',
@@ -35,6 +36,7 @@ export class ReportComponent {
   groupedExpenses: any[] = [];
   groupedIncomes: any[] = [];
   totalIncome: number = 0;
+  destroy$ = new Subject<void>();
   constructor(
     private dataService: DataService,
     private authService: AuthService,
@@ -55,7 +57,7 @@ export class ReportComponent {
 
   getExpenses() {
     this.isLoading = true;
-    this.dataService.getExpenses(this.user.id).subscribe(expenses => {
+    this.dataService.getExpenses(this.user.id).pipe(takeUntil(this.destroy$)).subscribe(expenses => {
       this.isLoading = false;
       this.expenses = expenses;
       this.allExpenses = JSON.parse(JSON.stringify(expenses));
@@ -126,7 +128,7 @@ export class ReportComponent {
   getIncomes() {
     this.isLoading = true;
     const month = this.datepipe.transform(new Date(), 'MMM, yyyy');
-    this.dataService.getIncomes(this.user.id).subscribe((incomes) => {
+    this.dataService.getIncomes(this.user.id).pipe(takeUntil(this.destroy$)).subscribe((incomes) => {
       this.isLoading = false;
       this.allIncomes = JSON.parse(JSON.stringify(incomes));
       this.grupIncomesByMonth();
@@ -140,5 +142,10 @@ export class ReportComponent {
   
   onFilter() {
 
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

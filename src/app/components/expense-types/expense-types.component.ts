@@ -5,6 +5,7 @@ import { SharedModule } from '../../shared/shared.module';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../shared/services/auth.service';
 import { Subject, takeUntil } from 'rxjs';
+import { ToastService } from '../../shared/services/toast.service';
 
 @Component({
   selector: 'app-expense-types',
@@ -25,7 +26,8 @@ export class ExpenseTypesComponent implements OnInit {
 
   constructor(
     private dataService: DataService,
-    private authService: AuthService
+    private authService: AuthService,
+    private toastService: ToastService
   ) { }
 
   ngOnInit() {
@@ -51,6 +53,7 @@ export class ExpenseTypesComponent implements OnInit {
 
   deleteExpenseType(id: string) {
     this.dataService.deleteExpenseType(id)
+    this.toastService.displayToast('success', 'Expense Type', 'Expense Type Deleted!'); 
   }
 
   ngOnDestroy(): void {

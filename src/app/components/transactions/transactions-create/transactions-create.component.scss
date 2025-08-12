@@ -1,0 +1,21 @@
+.wallet__card {
+    @apply flex flex-col items-center px-2 py-3 bg-gray-50 rounded-2xl relative;
+    border: 2px solid #F0F6F5;
+    transition: all 0.3s ease-in-out;
+    &.active,
+    &:hover {
+        @apply cursor-pointer;
+        border-color: #2F7E79;
+        p {
+            color: #2F7E79;
+        }
+    }
+
+    p {
+        @apply text-lg font-semibold text-gray-500 transition-all duration-300;
+    }
+
+    span {
+        @apply text-xs text-gray-500;
+    }
+}

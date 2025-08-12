@@ -1,0 +1,42 @@
+<div class="section dashboard">
+    <div class="content-padding">
+        <p class="section-title">Add Wallet</p>
+    </div>
+</div>
+
+<div class="section-content-v2">
+    <form class="form" [formGroup]="form">
+        <div class="form__group">
+            <label for="name">Name<span class="text-red-500">*</span></label>
+            <input type="text" id="name" placeholder="Name" formControlName="name">
+        </div>
+
+        <div class="form__group">
+            <label for="balance">Balance<span class="text-red-500">*</span></label>
+            <input type="number" id="balance" placeholder="balance" formControlName="balance">
+        </div>
+
+        <!-- Radio Button -->
+        <div class="form__group">
+            <label for="type">Type<span class="text-red-500">*</span></label>
+            <div class="flex gap-4 items-center">
+                <div class="flex items-center">
+                    <p-radioButton formControlName="type" value="bank" inputId="bank" />
+                    <label for="bank" class="ml-2 !mb-0">Bank</label>
+                </div>
+                <div class="flex items-center">
+                    <p-radioButton formControlName="type" value="cash" inputId="cash" />
+                    <label for="cash" class="ml-2 !mb-0">Cash</label>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<button class="form__btn create__btn" [disabled]="!form.valid" (click)="submitWallet()">
+    @if(isLoading) {
+    <app-spinner></app-spinner>
+    } @else {
+        Submit
+    }
+</button>
