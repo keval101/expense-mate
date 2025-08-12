@@ -8,6 +8,7 @@ import { Subject } from 'rxjs';
 import { AuthService } from '../../../shared/services/auth.service';
 import { DataService } from '../../../shared/services/data.service';
 import { ToastService } from '../../../shared/services/toast.service';
+import { SelectModule } from 'primeng/select';
 
 @Component({
   selector: 'app-income-create',
@@ -16,7 +17,8 @@ import { ToastService } from '../../../shared/services/toast.service';
     ReactiveFormsModule,
     RouterModule,
     SharedModule,
-    DatePickerModule
+    DatePickerModule,
+    SelectModule
   ],
   providers: [DatePipe],
   templateUrl: './income-create.component.html',
@@ -30,7 +32,8 @@ export class IncomeCreateComponent {
   destroy$ = new Subject<void>();
   id: string = '';
   income: any = {}; 
-
+  wallets: any[] = [];
+  selectedWallet: any;
 
   constructor(
     private fb: FormBuilder,
@@ -46,11 +49,13 @@ export class IncomeCreateComponent {
     this.form = this.fb.group({
       name: ['', Validators.required],
       amount: ['', Validators.required],
-      date: ['', Validators.required]
+      date: ['', Validators.required],
+      wallet: ['', Validators.required]
     })
 
     this.authService.getCurrentUserDetail().then(user => {
       this.user = user;
+      this.getWallets(this.user.id);
     })
 
     this.route.params.subscribe(params => {
@@ -59,15 +64,23 @@ export class IncomeCreateComponent {
     });
   }
 
+  getWallets(id: string) {
+    console.log(id);
+    this.dataService.getUserWallets(id).subscribe((wallets) => {
+      this.wallets = wallets;
+      console.log(this.wallets);
+    });
+  }
+
   getExpenseDetail() {
     this.dataService.getExpenseDetail(this.id).then((data) => {
       this.income = data?.data();
       this.form.patchValue(this.income)
-      this.form.get('date')?.setValue(new Date(this.income.date));
+      // this.form.get('date')?.setValue(new Date(this.income.date));
     });
   }
 
-  submitIncome() {
+  async submitIncome() {
     this.isLoading = true;
     const payload = {
       ...this.form.value,
@@ -75,6 +88,14 @@ export class IncomeCreateComponent {
       date: this.datepipe.transform(this.form.value.date, 'MMM dd, yyyy'),
       month: this.datepipe.transform(this.form.value.date, 'MMM, yyyy')
     }
+
+    // update wallet balance
+    const wallet = payload.wallet;
+    if(wallet) {
+      wallet.balance = wallet.balance + payload.amount;
+      await this.dataService.updateWallet(wallet.id, wallet.user.id, wallet.balance);
+    }
+
     this.dataService.saveIncome(payload, this.id).then((data) => {
       this.toastService.displayToast('success', 'Income', 'Income Saved!');
       this.isLoading = false;
