@@ -151,7 +151,9 @@ export class TransactionsComponent {
 
   setTotalExpense() {
     this.sortExpenses();
-    this.totalExpense = this.expenses?.reduce((sum, item) => sum + (item.amount || 0), 0) || 0;
+    this.totalExpense = this.expenses?.reduce((sum, item) => {
+      return sum + (item.type.type == 'cash-transfer' ? 0 : item.amount);
+    }, 0) || 0;
   }
 
   onSearch(value: string) {
@@ -175,8 +177,12 @@ export class TransactionsComponent {
   }
 
   async deleteExpense(item: any) {
-   await this.dataService.deleteExpense(item.id, item.user.id)
-   this.toastService.displayToast('success', 'Expense', 'Expense Deleted!');
+    const wallet = item.wallet
+    wallet.balance = wallet.balance + item.amount;
+    await this.dataService.updateWallet(wallet.id, item.user.id, wallet.balance);
+
+    await this.dataService.deleteExpense(item.id, item.user.id)
+    this.toastService.displayToast('success', 'Expense', 'Expense Deleted!');
   }
 
   sortExpenses() {

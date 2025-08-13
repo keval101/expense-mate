@@ -26,6 +26,7 @@ export class DashboardComponent {
   month: any[] = [];
   currentDate = new Date();
   destroy$ = new Subject<void>();
+  wallets: any[] = [];
   constructor(
     private authService: AuthService,
     private dataService: DataService,
@@ -40,6 +41,7 @@ export class DashboardComponent {
       this.month = [month];
       this.getIncomes();
       this.getExpenses();
+      this.getWallets();
     });
   }
 
@@ -54,6 +56,12 @@ export class DashboardComponent {
     this.dataService.getExpenses(this.user.id, this.month).pipe(takeUntil(this.destroy$)).subscribe(expenses => {
       this.expenses = expenses;
       this.setBalance();
+    })
+  }
+
+  getWallets() {
+    this.dataService.getUserWallets(this.user.id).pipe(takeUntil(this.destroy$)).subscribe(wallets => {
+      this.wallets = wallets;
     })
   }
 
