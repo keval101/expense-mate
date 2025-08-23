@@ -89,7 +89,7 @@ export class ReportComponent {
 
     data.forEach(x => {
       x['topSpending'] = this.getTopSpending(x.expenses);
-      x['totalExpense'] = x.expenses?.reduce((sum: any, item: any) => sum + (item.amount || 0), 0) || 0;
+      x['totalExpense'] = x.expenses?.reduce((sum: any, item: any) => sum + (item.selfTransfer ? 0 : item.amount), 0) || 0;
       const savings = x.expenses?.filter((y: any) => y.type.type === 'savings');
       x['totalSavings'] = savings?.reduce((sum: any, item: any) => sum + (item.amount || 0), 0) || 0;
     })
