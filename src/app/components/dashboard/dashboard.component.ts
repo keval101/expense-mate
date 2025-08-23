@@ -67,9 +67,9 @@ export class DashboardComponent {
 
   async setBalance() {
     this.totalIncome = this.incomes?.reduce((sum, item) => sum + (item.amount || 0), 0) || 0;
-    this.totalExpense = this.expenses?.reduce((sum, item) => sum + (item.amount || 0), 0) || 0;
+    this.totalExpense = this.expenses?.reduce((sum, item) => sum + (item.selfTransfer ? 0 : item.amount), 0) || 0;
     await this.dataService.updateUserRemainingBalance()
-    this.balance = this.user.remainingBalance ?? 0;
+    this.balance = this.wallets.reduce((sum, item) => sum + (item.balance || 0), 0);
     this.isLoading = false;
   }
 

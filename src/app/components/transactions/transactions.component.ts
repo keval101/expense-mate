@@ -152,7 +152,7 @@ export class TransactionsComponent {
   setTotalExpense() {
     this.sortExpenses();
     this.totalExpense = this.expenses?.reduce((sum, item) => {
-      return sum + (item.type.type == 'cash-transfer' ? 0 : item.amount);
+      return sum + (item.selfTransfer ? 0 : item.amount);
     }, 0) || 0;
   }
 
@@ -162,6 +162,7 @@ export class TransactionsComponent {
     this.expenses = this.allExpenses.filter(expense => {
       return expense.name.toLowerCase().includes(search.toLowerCase());
     })
+    console.log(this.expenses)
     this.setTotalExpense();
   }
 
