@@ -39,7 +39,7 @@ export class TransactionsComponent {
   searchValue = '';
   selectedMonths: any[] = [];
   destroy$ = new Subject<boolean>();
-
+  wallets: any[] = [];
     @HostListener('window:resize', ['$event'])
     onResize(event: any) {
       this.setDrawerPosition();
@@ -58,6 +58,7 @@ export class TransactionsComponent {
       this.user = user;
       this.selectedMonths = [this.datepipe.transform(new Date(), 'MMM, yyyy')];
       this.getExpenses();
+      this.getWallets(this.user.id);
     })
   }
 
@@ -149,6 +150,12 @@ export class TransactionsComponent {
     })
   }
 
+  getWallets(userId: string) {
+    this.dataService.getUserWallets(userId).pipe(takeUntil(this.destroy$)).subscribe((data) => {
+      this.wallets = data;
+    });
+  }
+
   setTotalExpense() {
     this.sortExpenses();
     this.totalExpense = this.expenses?.reduce((sum, item) => {
@@ -179,8 +186,9 @@ export class TransactionsComponent {
 
   async deleteExpense(item: any) {
     const wallet = item.wallet
-    wallet.balance = wallet.balance + item.amount;
-    await this.dataService.updateWallet(wallet.id, item.user.id, wallet.balance);
+    const selectedWallet = this.wallets.find(w => w.id === wallet?.id);
+    selectedWallet.balance = selectedWallet.balance + item.amount;
+    await this.dataService.updateWallet(selectedWallet.id, selectedWallet.user.id, selectedWallet.balance);
 
     await this.dataService.deleteExpense(item.id, item.user.id)
     this.toastService.displayToast('success', 'Expense', 'Expense Deleted!');

@@ -118,8 +118,9 @@ export class TransactionsCreateComponent implements OnInit {
     // update wallet balance
     const wallet = payload.wallet;
     if(wallet) {
-      wallet.balance = wallet.balance - payload.amount;
-      await this.dataService.updateWallet(wallet.id, wallet.user.id, wallet.balance);
+      const selectedWallet = this.wallets.find(w => w.id === payload.wallet?.id);
+      selectedWallet.balance = selectedWallet.balance - payload.amount;
+      await this.dataService.updateWallet(selectedWallet.id, selectedWallet.user.id, selectedWallet.balance);
     }
 
     if(payload.selfTransfer) {
