@@ -10,6 +10,7 @@ import { TransactionsFilterComponent } from './transactions-filter/transactions-
 import { ToastService } from '../../shared/services/toast.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs';
+import { Parser } from '@json2csv/plainjs';
 
 @Component({
   selector: 'app-transactions',
@@ -26,7 +27,6 @@ import { takeUntil } from 'rxjs';
   encapsulation: ViewEncapsulation.None
 })
 export class TransactionsComponent {
-
   user: any;
   expenses: any[] = [];
   allExpenses: any[] = [];
@@ -169,7 +169,6 @@ export class TransactionsComponent {
     this.expenses = this.allExpenses.filter(expense => {
       return expense.name.toLowerCase().includes(search.toLowerCase());
     })
-    console.log(this.expenses)
     this.setTotalExpense();
   }
 
@@ -200,6 +199,33 @@ export class TransactionsComponent {
       const dateB = new Date(b.date);
       return (b?.time || dateB) - (a?.time || dateA)
     });
+  }
+
+  exportToCSV() {
+    const data = this.expenses.map(x => {
+      return {
+        "Name": x.name,
+        "Type": x.type.type,
+        "Amount": x.amount,
+        "Date": x.date,
+        "Wallet": x.wallet.name,
+      }
+    })
+    try {
+      const parser = new Parser({ fields: ['Name', 'Type', 'Amount', 'Date', 'Wallet'] });
+      const csv = parser.parse(data);
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `expenses_${new Date().toISOString().split('T')[0]}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error exporting CSV:', error);
+    }
   }
 
   ngOnDestroy(): void {
