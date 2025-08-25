@@ -19,6 +19,7 @@
     "@angular/platform-browser": "^19.0.0",
     "@angular/platform-browser-dynamic": "^19.0.0",
     "@angular/router": "^19.0.0",
+    "@json2csv/plainjs": "^7.0.6",
     "@primeng/themes": "^19.0.6",
     "primeng": "^19.0.6",
     "rxjs": "~7.8.0",
