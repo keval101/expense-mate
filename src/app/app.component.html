@@ -1,13 +1,11 @@
-
-<div class="mobile-container relative">
+<div class="mobile-container mobile-container--dark relative">
     <app-toast></app-toast>
     @if(needSidebar) {
         <app-sidebar></app-sidebar>
     }
     <div class="w-full desktop-container">
         <div [class.sm:shadow-xl]="needSidebar" [class.sm:h-full]="needSidebar">
-            <router-outlet (activate)="onActivate($event)"></router-outlet>
+            <router-outlet (activate)="onActivate()"></router-outlet>
         </div>
     </div>
-    <!-- <router-outlet (activate)="onActivate($event)"></router-outlet> -->
 </div>

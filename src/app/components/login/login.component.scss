@@ -1,65 +1,74 @@
 @use '../../../../public/styles/variable' as *;
 
 .login {
-    padding-bottom: 20px;
+  padding-bottom: 20px;
+  background-color: $bg;
 
-    &.login_bg {
-        @media screen and (max-width: 450px) {
-            @apply flex justify-center items-center flex-col w-full h-full;
-        }
+  &.login_bg {
+    @media screen and (max-width: 450px) {
+      @apply flex justify-center items-center flex-col w-full h-full;
     }
-    
+  }
+
+  @media screen and (min-width: 450px) {
+    @apply m-auto shadow-lg rounded-2xl absolute pb-20;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 500px;
+    height: auto;
+    background-color: $card;
+    border: 1px solid $border;
+  }
+
+  &__header {
+    @apply relative flex justify-center items-center flex-grow;
+    background-size: cover;
+    padding-top: 80px;
+    background-image: url('./../../../../public/images/man-bg.svg');
+    background-repeat: no-repeat;
+    background-position: bottom;
+    transition: all 0.3s ease-in-out;
+    height: 50vh;
+
     @media screen and (min-width: 450px) {
-        @apply m-auto shadow-lg rounded-2xl bg-white absolute pb-20;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 500px;
-        height: auto;
+      @apply rounded-t-2xl;
     }
 
-    &__header {
-        @apply relative flex justify-center items-center flex-grow;
-        background-size: cover;
-        padding-top: 80px;
-        background-image: url('./../../../../public/images/man-bg.svg');
-        background-repeat: no-repeat;
-        background-position: bottom;
-        transition: all 0.3s ease-in-out;
-        height: 50vh;
+    img {
+      height: 51vh;
 
-        @media screen and (min-width: 450px) {
-            @apply rounded-t-2xl;
-        }
-
-        img {
-            height: 51vh;
-            @media screen and (min-width: 450px) {
-                height: 100%;
-            }
-        }
-
-        &.hide {
-            transform: translateY(-150%);
-            position: absolute;
-            top: 0;
-            transition: all 0.3s ease-in-out;
-        }
+      @media screen and (min-width: 450px) {
+        height: 100%;
+      }
     }
 
-    &__title {
-        @apply font-bold text-center capitalize mt-8;
-        font-size: 28px;
-        color: $primary;
-        transition: all 0.3s ease-in-out;
+    &.hide {
+      transform: translateY(-150%);
+      position: absolute;
+      top: 0;
+      transition: all 0.3s ease-in-out;
     }
+  }
 
-    &__text {
-        @apply text-center text-sm mt-4;
-        transition: all 0.3s ease-in-out;
+  &__title {
+    @apply font-bold text-center capitalize mt-8;
+    font-size: 28px;
+    color: $text;
+    transition: all 0.3s ease-in-out;
 
-        a {
-            color: $primary;
-        }
+    span {
+      color: $text-muted;
     }
+  }
+
+  &__text {
+    @apply text-center text-sm mt-4;
+    color: $text-muted;
+    transition: all 0.3s ease-in-out;
+
+    a {
+      color: $primary;
+    }
+  }
 }

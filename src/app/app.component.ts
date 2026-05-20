@@ -1,5 +1,6 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
+import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import { filter, Subject, takeUntil } from 'rxjs';
 import { ToastService } from './shared/services/toast.service';
 import { SharedModule } from './shared/shared.module';
 
@@ -13,12 +14,13 @@ import { SharedModule } from './shared/shared.module';
   styleUrl: './app.component.scss',
   encapsulation: ViewEncapsulation.None
 })
-export class AppComponent implements OnInit{
+export class AppComponent implements OnInit, OnDestroy {
   title = 'expense-mate';
   isShowToast = false;
   toast: any = {};
   routes: string[] = ['', 'login'];
   needSidebar = false;
+  private destroy$ = new Subject<void>();
 
   constructor(
     private toastService: ToastService,
@@ -36,13 +38,25 @@ export class AppComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    setTimeout(() => {
-      const url = this.router.url.replaceAll('/', '');
-      this.needSidebar = !this.routes.includes(url);
-    }, 800);
+    this.updateRouteState();
+    this.router.events
+      .pipe(
+        filter((e) => e instanceof NavigationEnd),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(() => this.updateRouteState());
   }
 
-  onActivate(event: any) {
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  onActivate(): void {
+    this.updateRouteState();
+  }
+
+  private updateRouteState(): void {
     const url = this.router.url.replaceAll('/', '');
     this.needSidebar = !this.routes.includes(url);
   }

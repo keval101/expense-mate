@@ -1,91 +1,129 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { AuthService } from '../../shared/services/auth.service';
 import { CommonModule, DatePipe } from '@angular/common';
 import { TransactionsHistoryComponent } from '../transactions-history/transactions-history.component';
 import { DataService } from '../../shared/services/data.service';
 import { SharedModule } from '../../shared/shared.module';
+import { RouterModule } from '@angular/router';
+import { SidebarService } from '../../shared/services/sidebar.service';
 import { Subject, takeUntil } from 'rxjs';
+
+export interface WeekChartBucket {
+  label: string;
+  amount: number;
+}
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule, TransactionsHistoryComponent, SharedModule],
+  imports: [
+    CommonModule,
+    TransactionsHistoryComponent,
+    SharedModule,
+    RouterModule,
+  ],
   providers: [DatePipe],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })
-export class DashboardComponent {
-  greeting: string = '';
-  name: string = '';
-  incomes: any[] = [];
+export class DashboardComponent implements OnDestroy {
+  name = '';
   expenses: any[] = [];
   user: any;
-  totalIncome = 0;
   totalExpense = 0;
-  balance = 0;
   isLoading = true;
-  month: any[] = [];
-  currentDate = new Date();
+  month: string[] = [];
+  weekBuckets: WeekChartBucket[] = [];
+  chartMax = 3000;
+  yAxisLabels: number[] = [];
   destroy$ = new Subject<void>();
-  wallets: any[] = [];
+
   constructor(
     private authService: AuthService,
     private dataService: DataService,
-    private datepipe: DatePipe
+    private datepipe: DatePipe,
+    private sidebarService: SidebarService
   ) {
-    this.greeting = this.getGreeting();
-
     this.authService.getCurrentUserDetail().then((user) => {
       this.user = user;
-      this.name = this.user.first_name + ' ' + this.user.last_name;
-      const month = this.datepipe.transform(new Date(), 'MMM, yyyy');
+      this.name = `${this.user.first_name} ${this.user.last_name}`.trim();
+      const month = this.datepipe.transform(new Date(), 'MMM, yyyy')!;
       this.month = [month];
-      this.getIncomes();
       this.getExpenses();
-      this.getWallets();
     });
   }
 
-  getIncomes() {
-    this.dataService.getIncomes(this.user.id, this.month).pipe(takeUntil(this.destroy$)).subscribe((incomes) => {
-      this.incomes = incomes;
-      this.setBalance();
+  getExpenses(): void {
+    this.dataService
+      .getExpenses(this.user.id, this.month)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((expenses) => {
+        this.expenses = expenses;
+        this.totalExpense =
+          this.expenses?.reduce(
+            (sum, item) => sum + (item.selfTransfer ? 0 : item.amount),
+            0
+          ) || 0;
+        this.buildChartData();
+        this.isLoading = false;
+      });
+  }
+
+  buildChartData(): void {
+    const labels = ['1-7', '8-14', '15-21', '22-28', '29-31'];
+    const amounts = [0, 0, 0, 0, 0];
+
+    this.expenses.forEach((expense) => {
+      if (expense.selfTransfer) return;
+      const day = new Date(expense.date).getDate();
+      const index = this.getWeekBucketIndex(day);
+      amounts[index] += expense.amount || 0;
     });
+
+    this.weekBuckets = labels.map((label, i) => ({
+      label,
+      amount: amounts[i],
+    }));
+
+    this.chartMax = this.getNiceMax(Math.max(...amounts, 1));
+    this.yAxisLabels = this.buildYAxisLabels(this.chartMax);
   }
 
-  getExpenses() {
-    this.dataService.getExpenses(this.user.id, this.month).pipe(takeUntil(this.destroy$)).subscribe(expenses => {
-      this.expenses = expenses;
-      this.setBalance();
-    })
+  getWeekBucketIndex(day: number): number {
+    if (day <= 7) return 0;
+    if (day <= 14) return 1;
+    if (day <= 21) return 2;
+    if (day <= 28) return 3;
+    return 4;
   }
 
-  getWallets() {
-    this.dataService.getUserWallets(this.user.id).pipe(takeUntil(this.destroy$)).subscribe(wallets => {
-      this.wallets = wallets;
-    })
+  getNiceMax(value: number): number {
+    if (value <= 0) return 1000;
+    const magnitude = Math.pow(10, Math.floor(Math.log10(value)));
+    const normalized = value / magnitude;
+    let nice: number;
+    if (normalized <= 1) nice = 1;
+    else if (normalized <= 2) nice = 2;
+    else if (normalized <= 5) nice = 5;
+    else nice = 10;
+    return nice * magnitude;
   }
 
-  async setBalance() {
-    this.totalIncome = this.incomes?.reduce((sum, item) => sum + (item.amount || 0), 0) || 0;
-    this.totalExpense = this.expenses?.reduce((sum, item) => sum + (item.selfTransfer ? 0 : item.amount), 0) || 0;
-    await this.dataService.updateUserRemainingBalance()
-    this.balance = this.wallets.reduce((sum, item) => sum + (item.balance || 0), 0);
-    this.isLoading = false;
+  buildYAxisLabels(max: number): number[] {
+    const step = max / 3;
+    return [max, Math.round(step * 2), Math.round(step), 0];
   }
 
-  getGreeting() {
-    const hours = new Date().getHours();
-    let greeting;
+  getBarHeight(amount: number): number {
+    if (!this.chartMax || amount <= 0) return 0;
+    return Math.max((amount / this.chartMax) * 100, amount > 0 ? 4 : 0);
+  }
 
-    if (hours < 12) {
-      greeting = 'Good morning';
-    } else if (hours < 18) {
-      greeting = 'Good afternoon';
-    } else {
-      greeting = 'Good evening';
-    }
+  formatAxisLabel(value: number): string {
+    return value.toLocaleString('en-IN');
+  }
 
-    return `${greeting}`;
+  openMenu(): void {
+    this.sidebarService.open();
   }
 
   ngOnDestroy(): void {

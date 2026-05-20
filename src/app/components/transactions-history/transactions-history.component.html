@@ -1,28 +1,28 @@
 <div class="transactions pb-8 content-padding">
-    <div class="flex justify-between items-center mb-5">
-        <p class="title !mb-0">Expense history</p>
-        <p class="subtitle cursor-pointer" [routerLink]="['/expenses']">See all</p>
-    </div>
-    <div class="transactions__items">
-        @if(isLoading) {
-        <app-spinner></app-spinner>
-        } @else {
-        @for(item of expenses; track item) {
+  <div class="flex justify-between items-center mb-5">
+    <p class="title !mb-0">Expense history</p>
+    <p class="subtitle cursor-pointer" [routerLink]="['/expenses']">See all</p>
+  </div>
+  <div class="transactions__items">
+    @if (isLoading) {
+      <app-spinner></app-spinner>
+    } @else {
+      @for (item of expenses; track item) {
         <div class="transactions__card">
-            <div class="transactions__card-image">
-                <img [src]="getIcon(item?.type?.type)" alt="">
-            </div>
-            <div class="transactions__card-info">
-                <p class="name">{{item?.name}}</p>
-                <p class="date">{{item?.date}}</p>
-            </div>
-            <p class="transactions__card-money green">{{item?.amount | currency: 'INR'}}</p>
+          <div class="transactions__card-image">
+            <img [src]="getIcon(item?.type?.type)" alt="" />
+          </div>
+          <div class="transactions__card-info">
+            <p class="name">{{ item?.name }}</p>
+            <p class="date">{{ item?.date }}</p>
+          </div>
+          <p class="transactions__card-money green">{{ item?.amount | currency: 'INR' }}</p>
         </div>
-        }
+      }
 
-        @if(!expenses.length) {
+      @if (!expenses.length) {
         <p class="text-center">No Expenses Found For This Month!</p>
-        }
-        }
-    </div>
+      }
+    }
+  </div>
 </div>

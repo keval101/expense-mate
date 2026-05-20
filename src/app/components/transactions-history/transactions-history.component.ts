@@ -25,7 +25,7 @@ export class TransactionsHistoryComponent {
   ) {
     this.authService.getCurrentUserDetail().then((user) => {
       this.user = user;
-      this.month = [this.datePipe.transform(new Date(), 'MMM, yyyy')];
+      this.month = [this.datePipe.transform(new Date(), 'MMM, yyyy')!];
       this.getExpenses();
     });
   }

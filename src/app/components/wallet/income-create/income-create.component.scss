@@ -1,21 +1,26 @@
 .wallet__card {
-    @apply flex flex-col items-center px-2 py-3 bg-gray-50 rounded-2xl relative;
-    border: 2px solid #F0F6F5;
-    transition: all 0.3s ease-in-out;
-    &.active,
-    &:hover {
-        @apply cursor-pointer;
-        border-color: #2F7E79;
-        p {
-            color: #2F7E79;
-        }
-    }
+  @apply flex flex-col items-center px-2 py-3 rounded-2xl relative;
+  background-color: #1c1c1e;
+  border: 2px solid #2c2c2e;
+  transition: all 0.3s ease-in-out;
+
+  &.active,
+  &:hover {
+    @apply cursor-pointer;
+    border-color: #2f7e79;
 
     p {
-        @apply text-lg font-semibold text-gray-500 transition-all duration-300;
+      color: #63b5ae;
     }
+  }
 
-    span {
-        @apply text-xs text-gray-500;
-    }
+  p {
+    @apply text-lg font-semibold transition-all duration-300;
+    color: #8e8e93;
+  }
+
+  span {
+    @apply text-xs;
+    color: #8e8e93;
+  }
 }

@@ -1,57 +1,70 @@
-<div class="section dashboard">
-  <div class="dashboard__greeting content-padding">
-    <p class="greeting">{{ greeting }},</p>
-    <p class="username">{{ name }}</p>
-  </div>
+<div class="dashboard">
+  <header class="dashboard__header content-padding">
+    <button type="button" class="dashboard__profile" (click)="openMenu()">
+      <span class="dashboard__profile-name">{{ name }}</span>
+      <i class="ri-arrow-up-down-line"></i>
+    </button>
 
-  <div class="dashboard__card relative">
-    <div>
-      <p class="total flex">Wallet <span class="inline-flex current-month ml-auto">{{currentDate | date: 'MMM, yyyy'}}</span></p>
-      <p class="balance w-fit">
-        @if(isLoading) {
-          <app-spinner></app-spinner>
-          } @else {
-            {{ balance | currency : "INR" }}
-          }
+    <div class="dashboard__actions">
+      <a routerLink="/expenses" class="dashboard__action-btn" aria-label="Search expenses">
+        <i class="ri-search-line"></i>
+      </a>
+      <button type="button" class="dashboard__action-btn" (click)="openMenu()" aria-label="Open menu">
+        <i class="ri-equalizer-line"></i>
+      </button>
+      <a routerLink="/profile" class="dashboard__action-btn" aria-label="Settings">
+        <i class="ri-settings-3-line"></i>
+      </a>
+    </div>
+  </header>
+
+  <section class="dashboard__summary content-padding">
+    <div class="dashboard__card">
+      <p class="dashboard__card-label">Spent this month</p>
+      <p class="dashboard__card-amount">
+        @if (isLoading) {
+          <app-spinner class="dashboard__spinner"></app-spinner>
+        } @else {
+          {{ totalExpense | currency: 'INR' }}
+        }
       </p>
-    </div>
 
-    <div class="flex justify-between mt-5">
-      <div class="income">
-        <div class="income__title flex items-center gap-2">
-          <div class="income__img">
-            <img src="/icons/arrow-down.svg" alt="" />
-          </div>
-          <p>Income</p>
-        </div>
-        <p class="income__money">
-          @if(isLoading) {
-            <app-spinner></app-spinner>
-            } @else {
-              {{ totalIncome | currency : "INR" }}
-            }
-        </p>
-      </div>
-
-      <div class="expense">
-        <div class="expense__title flex items-center gap-2">
-          <div class="expense__img">
-            <img src="/icons/arrow-up.svg" alt="" />
-          </div>
-          <p>Expense</p>
-        </div>
-        <p class="income__money">
-          @if(isLoading) {
-          <app-spinner></app-spinner>
-          } @else {
-            {{ totalExpense | currency : "INR" }}
+      <div class="dashboard__chart">
+        <div class="dashboard__chart-bars">
+          @for (bucket of weekBuckets; track bucket.label) {
+            <div class="dashboard__chart-col">
+              <div
+                class="dashboard__chart-bar"
+                [style.height.%]="getBarHeight(bucket.amount)"
+              ></div>
+            </div>
           }
-        </p>
+        </div>
+
+        <div class="dashboard__chart-axis">
+          @for (label of yAxisLabels; track label) {
+            <span>{{ formatAxisLabel(label) }}</span>
+          }
+        </div>
+
+        <div class="dashboard__chart-grid">
+          @for (label of yAxisLabels; track label) {
+            <span></span>
+          }
+        </div>
+      </div>
+
+      <div class="dashboard__chart-labels">
+        @for (bucket of weekBuckets; track bucket.label) {
+          <span>{{ bucket.label }}</span>
+        }
       </div>
     </div>
-  </div>
-</div>
+  </section>
 
-<div class="transactions-container">
   <app-transactions-history></app-transactions-history>
+
+  <a routerLink="/expenses/add" class="dashboard__fab" aria-label="Add expense">
+    <i class="ri-add-line"></i>
+  </a>
 </div>
