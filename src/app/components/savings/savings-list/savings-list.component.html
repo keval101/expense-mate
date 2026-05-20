@@ -1,0 +1,75 @@
+<div class="section dashboard">
+  <div class="content-padding">
+    <p class="section-title">Savings</p>
+  </div>
+</div>
+
+<div class="section-content pb-8 savings">
+  <div class="flex justify-between flex-col gap-3 sm:flex-row sm:items-center">
+    <div class="savings__total">
+      <p class="text-sm text-muted">Total Saved</p>
+      <p class="savings__total-amount">{{ getTotalSaved() | currency: 'INR' }}</p>
+    </div>
+    <div class="flex gap-3">
+      <button class="add-btn !ml-0" [routerLink]="['/savings/analytics']">Analytics</button>
+      <button class="add-btn !ml-0" [routerLink]="['/savings/add']">Add Savings</button>
+    </div>
+  </div>
+
+  <div class="savings__filters">
+    @for (type of typeFilters; track type) {
+      <button
+        type="button"
+        class="savings__filter-chip"
+        [class.active]="selectedType === type"
+        (click)="setTypeFilter(type)"
+      >
+        {{ type === 'all' ? 'All' : typeConfig[type].label }}
+      </button>
+    }
+  </div>
+
+  @if (isLoading) {
+    <app-loading-skeleton [count]="4"></app-loading-skeleton>
+  } @else if (!filteredSavings.length) {
+    <app-empty-state
+      icon="ri-safe-2-line"
+      title="No savings yet"
+      message="Start building your savings by transferring funds from a wallet."
+    >
+      <!-- <button class="add-btn mt-4" [routerLink]="['/savings/add']">Add Savings</button> -->
+    </app-empty-state>
+  } @else {
+    @for (item of filteredSavings; track item.id) {
+      <div class="savings__card" [routerLink]="['/savings/edit', item.id]">
+        <button (click)="setSelectedItem(item, $event)" class="close-btn">
+          <img src="/icons/close-red.svg" alt="Delete" />
+        </button>
+        <div class="savings__card-icon" [style.background]="typeConfig[item.type].color + '22'">
+          <i [class]="typeConfig[item.type].icon" [style.color]="typeConfig[item.type].color"></i>
+        </div>
+        <div class="savings__card-info">
+          <p class="name">{{ item.title }}</p>
+          <p class="meta">{{ item.walletName }} · {{ item.date }}</p>
+          @if (item.note) {
+            <p class="note">{{ item.note }}</p>
+          }
+        </div>
+        <div class="savings__card-right">
+          <span class="savings__type-badge" [style.color]="typeConfig[item.type].color">
+            {{ typeConfig[item.type].label }}
+          </span>
+          <p class="amount">{{ item.amount | currency: 'INR' }}</p>
+        </div>
+      </div>
+    }
+  }
+</div>
+
+@if (selectedItem) {
+  <app-delete
+    [name]="selectedItem.title"
+    (onDelete)="deleteSavings()"
+    (onCancel)="onCancelDelete()"
+  ></app-delete>
+}

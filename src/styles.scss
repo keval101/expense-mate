@@ -196,19 +196,17 @@ body {
         .p-select:not(.p-disabled).p-focus,
         .p-multiselect:not(.p-disabled).p-focus {
             border-color: #{$primary};
-        }
-
-        .p-select-option.p-select-option-selected,
-        .p-multiselect-option.p-multiselect-option-selected {
-            background: #{$primary};
-            color: #fff;
+            box-shadow: 0 0 0 1px rgba(47, 126, 121, 0.35);
         }
 
         .p-select,
         .p-multiselect {
+            width: 100%;
             background-color: #{$card-elevated};
-            border-color: #{$border};
+            border: 1.4px solid #{$border};
             color: #{$text};
+            border-radius: 8px;
+            min-height: 40px;
         }
 
         .p-select-label,
@@ -221,12 +219,6 @@ body {
 
         .p-datepicker {
             width: 100%;
-
-            .p-inputtext {
-                background-color: #{$card-elevated};
-                border-color: #{$border};
-                color: #{$text};
-            }
         }
     }
 
@@ -258,6 +250,7 @@ body {
 .delete-container {
     transform: translateX(-500px);
     opacity: 0;
+    pointer-events: none;
     transition: all 0.3s ease-in-out;
 
     @media screen and (min-width: 450px) {
@@ -267,6 +260,7 @@ body {
     &.show {
         transform: translateX(0);
         opacity: 1;
+        pointer-events: auto;
         transition: all 0.3s ease-in-out;
     }
 }
@@ -291,19 +285,169 @@ body {
 
 .p-select-overlay,
 .p-multiselect-overlay,
-.p-datepicker-panel {
+.p-datepicker-panel,
+.app-prime-panel {
     background: #{$card} !important;
-    border-color: #{$border} !important;
+    border: 1px solid #{$border} !important;
     color: #{$text} !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45) !important;
+}
+
+.p-select-list,
+.p-multiselect-list {
+    background: #{$card} !important;
 }
 
 .p-select-option,
 .p-multiselect-option {
     color: #{$text} !important;
+    border-radius: 8px;
+    margin: 2px 4px;
 
-    &:hover {
+    &:not(.p-select-option-selected):not(.p-multiselect-option-selected):hover,
+    &.p-focus:not(.p-select-option-selected):not(.p-multiselect-option-selected) {
         background: #{$card-elevated} !important;
+        color: #{$text} !important;
     }
+}
+
+.p-select-option.p-select-option-selected,
+.p-select-option.p-select-option-selected.p-focus,
+.p-multiselect-option.p-multiselect-option-selected,
+.p-multiselect-option.p-multiselect-option-selected.p-focus {
+    background: #{$primary} !important;
+    color: #fff !important;
+}
+
+.p-select-option-check-icon,
+.p-multiselect-option-check-icon {
+    color: #fff !important;
+}
+
+.p-select,
+.p-multiselect,
+.app-prime-select {
+    width: 100%;
+    background-color: #{$card-elevated} !important;
+    border: 1.4px solid #{$border} !important;
+    color: #{$text} !important;
+    border-radius: 8px !important;
+    min-height: 40px;
+
+    &:not(.p-disabled):hover {
+        border-color: #{$primary} !important;
+    }
+
+    &:not(.p-disabled).p-focus {
+        border-color: #{$primary} !important;
+        box-shadow: 0 0 0 1px rgba(47, 126, 121, 0.35) !important;
+    }
+}
+
+.p-select-label,
+.p-multiselect-label {
+    color: #{$text} !important;
+    font-size: 14px;
+}
+
+.p-select-label.p-placeholder,
+.p-multiselect-label.p-placeholder {
+    color: #{$text-muted} !important;
+}
+
+.p-select-dropdown,
+.p-multiselect-dropdown {
+    color: #{$text-muted} !important;
+}
+
+.p-datepicker,
+.app-prime-datepicker {
+    width: 100%;
+}
+
+.p-datepicker-input,
+.app-prime-input,
+.p-datepicker .p-inputtext {
+    width: 100%;
+    height: 40px;
+    font-size: 14px;
+    background-color: #{$card-elevated} !important;
+    border: 1.4px solid #{$border} !important;
+    color: #{$text} !important;
+    border-radius: 8px !important;
+
+    &::placeholder {
+        color: #{$text-muted} !important;
+    }
+
+    &:enabled:focus {
+        border-color: #{$primary} !important;
+        box-shadow: 0 0 0 1px rgba(47, 126, 121, 0.35) !important;
+    }
+}
+
+.p-datepicker-panel {
+    .p-datepicker-header {
+        background: #{$card-elevated} !important;
+        border-bottom: 1px solid #{$border} !important;
+        color: #{$text} !important;
+        padding: 0.75rem;
+    }
+
+    .p-datepicker-title,
+    .p-datepicker-select-month,
+    .p-datepicker-select-year {
+        color: #{$text} !important;
+        font-weight: 600;
+    }
+
+    .p-datepicker-prev-button,
+    .p-datepicker-next-button {
+        color: #{$text} !important;
+        background: transparent !important;
+
+        &:hover {
+            background: #{$card} !important;
+            color: #{$primary} !important;
+        }
+    }
+
+    .p-datepicker-weekday {
+        color: #{$text-muted} !important;
+    }
+
+    .p-datepicker-day {
+        color: #{$text} !important;
+        border-radius: 50%;
+
+        &:not(.p-datepicker-day-selected):not(.p-disabled):hover {
+            background: #{$card-elevated} !important;
+            color: #{$text} !important;
+        }
+    }
+
+    .p-datepicker-day-selected,
+    .p-datepicker-day.p-datepicker-day-selected {
+        background: #{$primary} !important;
+        color: #fff !important;
+    }
+
+    .p-datepicker-today > .p-datepicker-day:not(.p-datepicker-day-selected) {
+        border: 1px solid #{$primary};
+        color: #{$primary} !important;
+        background: transparent !important;
+    }
+
+    .p-datepicker-other-month .p-datepicker-day {
+        color: #{$text-muted} !important;
+        opacity: 0.55;
+    }
+}
+
+.p-datepicker-dropdown {
+    background: #{$card-elevated} !important;
+    border-color: #{$border} !important;
+    color: #{$text-muted} !important;
 }
 
 ::-webkit-scrollbar {

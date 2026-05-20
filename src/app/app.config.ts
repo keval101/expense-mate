@@ -27,7 +27,7 @@ export const appConfig: ApplicationConfig = {
         theme: {
             preset: Aura,
             options: {
-              darkModeSelector: '.mobile-container--dark'
+              darkModeSelector: '.app-dark'
             }
         }
     })

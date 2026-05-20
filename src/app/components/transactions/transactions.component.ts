@@ -34,7 +34,7 @@ export class TransactionsComponent {
   filter = false;
   filterValue: any = {};
   totalExpense = 0
-  selectedItem: any = {};
+  selectedItem: any = null;
   isDelete = false;
   searchValue = '';
   selectedMonths: any[] = [];
@@ -173,24 +173,57 @@ export class TransactionsComponent {
   }
 
   onCancel() {
-    this.selectedItem = {};
+    this.selectedItem = null;
     this.isDelete = false;
   }
 
   setSelectedItem(item: any, event: Event) {
     event.stopPropagation();
+    event.preventDefault();
     this.selectedItem = item;
     this.isDelete = true;
   }
 
   async deleteExpense(item: any) {
-    const wallet = item.wallet
-    const selectedWallet = this.wallets.find(w => w.id === wallet?.id);
-    selectedWallet.balance = selectedWallet.balance + item.amount;
-    await this.dataService.updateWallet(selectedWallet.id, selectedWallet.user.id, selectedWallet.balance);
+    if (!item?.id || !item?.user?.id) {
+      this.toastService.displayToast('error', 'Error', 'Invalid expense data');
+      return;
+    }
 
-    await this.dataService.deleteExpense(item.id, item.user.id)
-    this.toastService.displayToast('success', 'Expense', 'Expense Deleted!');
+    try {
+      await this.restoreWalletBalances(item);
+      await this.dataService.deleteExpense(item.id, item.user.id);
+      this.toastService.displayToast('success', 'Expense', 'Expense deleted!');
+      this.onCancel();
+      this.getExpenses();
+      this.getWallets(this.user.id);
+    } catch (error) {
+      console.error('Delete expense failed:', error);
+      this.toastService.displayToast('error', 'Error', 'Failed to delete expense');
+    }
+  }
+
+  private async restoreWalletBalances(item: any): Promise<void> {
+    const userId = item.user?.id ?? this.user?.id;
+    if (!userId) return;
+
+    const walletId = item.wallet?.id;
+    if (walletId) {
+      const wallet = await this.dataService.getUserWalletById(userId, walletId);
+      if (wallet) {
+        const newBalance = (wallet.balance ?? 0) + (item.amount ?? 0);
+        await this.dataService.updateWallet(walletId, userId, newBalance);
+      }
+    }
+
+    if (item.selfTransfer && item.selfTransferWallet?.id) {
+      const transferWalletId = item.selfTransferWallet.id;
+      const transferWallet = await this.dataService.getUserWalletById(userId, transferWalletId);
+      if (transferWallet) {
+        const newBalance = (transferWallet.balance ?? 0) - (item.amount ?? 0);
+        await this.dataService.updateWallet(transferWalletId, userId, newBalance);
+      }
+    }
   }
 
   sortExpenses() {

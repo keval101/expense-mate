@@ -1,0 +1,42 @@
+.expense-tracker {
+  &__filters {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  &__insights {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 16px;
+  }
+
+  &__trend {
+    margin-top: 12px;
+    font-size: 13px;
+    color: var(--text-muted, #8e8e93);
+  }
+
+  .chart-section {
+    margin-top: 24px;
+
+    &__title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    &__container {
+      height: 240px;
+      background: var(--card, #1c1c1e);
+      border-radius: 16px;
+      padding: 16px;
+      border: 1px solid var(--border, #2c2c2e);
+
+      &--doughnut {
+        height: 280px;
+      }
+    }
+  }
+}

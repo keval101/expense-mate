@@ -39,10 +39,19 @@ export class DataService {
         .toPromise();
       
       const totalExpense = expenseSnapshot?.docs
-        .map(doc => (doc.data() as Transaction)['amount'] || 0) // Replace 'amount' with your field name
+        .map(doc => (doc.data() as Transaction)['amount'] || 0)
         .reduce((sum, amount) => sum + amount, 0);
 
-      const remainingBalance = (totalIncome ?? 0) - (totalExpense ?? 0);
+      const savingsSnapshot = await this.fireStore
+        .collection(`users/${user.id}/savings`)
+        .get()
+        .toPromise();
+
+      const totalSavings = savingsSnapshot?.docs
+        .map(doc => (doc.data() as Transaction)['amount'] || 0)
+        .reduce((sum, amount) => sum + amount, 0) ?? 0;
+
+      const remainingBalance = (totalIncome ?? 0) - (totalExpense ?? 0) - totalSavings;
       // Update user document with totals
       await this.fireStore
         .collection('users')
@@ -50,6 +59,7 @@ export class DataService {
         .update({
           totalIncome,
           totalExpense,
+          totalSavings,
           remainingBalance,
         });
     } catch (error) {
@@ -111,25 +121,42 @@ export class DataService {
     );
   }
 
-  getExpenseDetail(id: string) {
-    return this.fireStore.collection('expenses').doc(id).get().toPromise();
+  getExpenseDetail(userId: string, id: string) {
+    return this.fireStore
+      .collection('users')
+      .doc(userId)
+      .collection('expenses')
+      .doc(id)
+      .get()
+      .toPromise();
   }
   
   async saveExpense(payload: any, id?: any) {
-    if(id) {
-      const response = await this.fireStore.collection('users').doc(payload.user.id).collection('expenses').doc(id).update(payload);
-      await this.updateUserRemainingBalance();
-      return this.fireStore.collection('expenses').doc(id).update(payload);
+    const userId = payload.user.id;
+    if (id) {
+      await this.fireStore
+        .collection('users')
+        .doc(userId)
+        .collection('expenses')
+        .doc(id)
+        .update(payload);
     } else {
-      const response = await this.fireStore.collection('users').doc(payload.user.id).collection('expenses').add(payload);
-      await this.updateUserRemainingBalance();
-      return this.fireStore.collection('expenses').doc(response.id).set(payload);
+      await this.fireStore
+        .collection('users')
+        .doc(userId)
+        .collection('expenses')
+        .add(payload);
     }
+    await this.updateUserRemainingBalance();
   }
 
   async deleteExpense(id: string, userId: string) {
     await this.fireStore.collection('users').doc(userId).collection('expenses').doc(id).delete();
-    const expense =await this.fireStore.collection('expenses').doc(id).delete();
+    try {
+      await this.fireStore.collection('expenses').doc(id).delete();
+    } catch {
+      // Root mirror may not exist
+    }
     await this.updateUserRemainingBalance();
   }
 
@@ -151,25 +178,42 @@ export class DataService {
     );
   }
 
-  getIncomeDetail(id: string) {
-    return this.fireStore.collection('incomes').doc(id).get().toPromise();
+  getIncomeDetail(userId: string, id: string) {
+    return this.fireStore
+      .collection('users')
+      .doc(userId)
+      .collection('incomes')
+      .doc(id)
+      .get()
+      .toPromise();
   }
 
   async saveIncome(payload: any, id?: any) {
-    if(id) {
-      const response = await this.fireStore.collection('users').doc(payload.user.id).collection('incomes').doc(id).update(payload);
-      await this.updateUserRemainingBalance();
-      return this.fireStore.collection('incomes').doc(id).update(payload);
+    const userId = payload.user.id;
+    if (id) {
+      await this.fireStore
+        .collection('users')
+        .doc(userId)
+        .collection('incomes')
+        .doc(id)
+        .update(payload);
     } else {
-      const response = await this.fireStore.collection('users').doc(payload.user.id).collection('incomes').add(payload);
-      await this.updateUserRemainingBalance();
-      return this.fireStore.collection('incomes').doc(response.id).set(payload);
+      await this.fireStore
+        .collection('users')
+        .doc(userId)
+        .collection('incomes')
+        .add(payload);
     }
+    await this.updateUserRemainingBalance();
   }
 
   async deleteIncome(id: string, userId: string) {
     await this.fireStore.collection('users').doc(userId).collection('incomes').doc(id).delete();
-    await this.fireStore.collection('incomes').doc(id).delete();
+    try {
+      await this.fireStore.collection('incomes').doc(id).delete();
+    } catch {
+      // Legacy root mirror may not exist
+    }
     await this.updateUserRemainingBalance();
   }
 
@@ -185,6 +229,17 @@ export class DataService {
         return bankAccounts;
       })
     );
+  }
+
+  getUserWalletById(userId: string, walletId: string): Promise<{ id: string; balance: number; [key: string]: any } | null> {
+    return this.fireStore
+      .collection('users')
+      .doc(userId)
+      .collection('wallets')
+      .doc(walletId)
+      .get()
+      .toPromise()
+      .then((doc) => (doc?.exists ? { id: doc.id, ...(doc.data() as object) } as any : null));
   }
 
   getWalletDetail(id: string) {
@@ -205,5 +260,55 @@ export class DataService {
 
   updateWallet(id: string, userId: string, balance: number) {
     return this.fireStore.collection('users').doc(userId).collection('wallets').doc(id).update({ balance });
+  }
+
+  async reverseExpenseWalletChanges(userId: string, expense: any): Promise<void> {
+    if (expense?.wallet?.id) {
+      const wallet = await this.getUserWalletById(userId, expense.wallet.id);
+      if (wallet) {
+        await this.updateWallet(expense.wallet.id, userId, wallet.balance + (expense.amount ?? 0));
+      }
+    }
+
+    if (expense?.selfTransfer && expense?.selfTransferWallet?.id) {
+      const wallet = await this.getUserWalletById(userId, expense.selfTransferWallet.id);
+      if (wallet) {
+        await this.updateWallet(expense.selfTransferWallet.id, userId, wallet.balance - (expense.amount ?? 0));
+      }
+    }
+  }
+
+  async applyExpenseWalletChanges(userId: string, expense: any): Promise<void> {
+    if (expense?.wallet?.id) {
+      const wallet = await this.getUserWalletById(userId, expense.wallet.id);
+      if (wallet) {
+        await this.updateWallet(expense.wallet.id, userId, wallet.balance - (expense.amount ?? 0));
+      }
+    }
+
+    if (expense?.selfTransfer && expense?.selfTransferWallet?.id) {
+      const wallet = await this.getUserWalletById(userId, expense.selfTransferWallet.id);
+      if (wallet) {
+        await this.updateWallet(expense.selfTransferWallet.id, userId, wallet.balance + (expense.amount ?? 0));
+      }
+    }
+  }
+
+  async reverseIncomeWalletChanges(userId: string, income: any): Promise<void> {
+    if (income?.wallet?.id) {
+      const wallet = await this.getUserWalletById(userId, income.wallet.id);
+      if (wallet) {
+        await this.updateWallet(income.wallet.id, userId, wallet.balance - (income.amount ?? 0));
+      }
+    }
+  }
+
+  async applyIncomeWalletChanges(userId: string, income: any): Promise<void> {
+    if (income?.wallet?.id) {
+      const wallet = await this.getUserWalletById(userId, income.wallet.id);
+      if (wallet) {
+        await this.updateWallet(income.wallet.id, userId, wallet.balance + (income.amount ?? 0));
+      }
+    }
   }
 }

@@ -1,0 +1,86 @@
+<div class="section dashboard">
+  <div class="content-padding">
+    <p class="section-title">{{ id ? 'Edit' : 'Add' }} Savings</p>
+  </div>
+</div>
+
+<div class="section-content-v2">
+  <form class="form" [formGroup]="form">
+    <div class="form__group">
+      <label for="title">Title<span class="text-red-500">*</span></label>
+      <input type="text" id="title" placeholder="e.g. Emergency fund" formControlName="title" />
+    </div>
+
+    <div class="form__group">
+      <label for="type">Savings Type<span class="text-red-500">*</span></label>
+      <p-select
+        [options]="typeOptions"
+        formControlName="type"
+        optionLabel="label"
+        optionValue="type"
+        placeholder="Select type"
+        styleClass="w-full app-prime-select"
+        panelStyleClass="app-prime-panel"
+      />
+    </div>
+
+    <div class="form__group">
+      <label for="amount">Amount<span class="text-red-500">*</span></label>
+      <input type="number" id="amount" placeholder="Amount" formControlName="amount" min="1" />
+    </div>
+
+    <div class="form__group">
+      <label for="date">Date<span class="text-red-500">*</span></label>
+      <p-datepicker
+        formControlName="date"
+        dateFormat="dd/mm/yy"
+        placeholder="Date"
+        [fluid]="true"
+        styleClass="app-prime-datepicker"
+        panelStyleClass="app-prime-panel"
+        inputStyleClass="app-prime-input"
+      />
+    </div>
+
+    <div class="form__group">
+      <label for="note">Note</label>
+      <input type="text" id="note" placeholder="Optional note" formControlName="note" />
+    </div>
+
+    <div class="form__group">
+      <label>From Wallet<span class="text-red-500">*</span></label>
+      @if (!wallets.length) {
+        <p class="wallet-empty">No wallets found. Please add a wallet first.</p>
+      } @else {
+        <div class="wallet-grid">
+          @for (wallet of wallets; track wallet.id) {
+            <div
+              class="wallet__card"
+              [class.active]="wallet.id === form.value.walletId"
+              (click)="selectWallet(wallet)"
+            >
+              <p>{{ wallet.balance | currency: 'INR' }}</p>
+              <span>{{ wallet.name }}</span>
+            </div>
+          }
+        </div>
+      }
+      @if (projectedBalance !== null) {
+        <p class="balance-preview">
+          Balance after save:
+          <strong [class.negative]="projectedBalance < 0">
+            {{ projectedBalance | currency: 'INR' }}
+          </strong>
+        </p>
+      }
+    </div>
+
+    <button class="form__btn create__btn savings-form__submit" [disabled]="!form.valid || isLoading" (click)="submit()">
+      @if (isLoading) {
+        <app-spinner></app-spinner>
+      } @else {
+        {{ id ? 'Update' : 'Save' }} Savings
+      }
+    </button>
+  </form>
+</div>

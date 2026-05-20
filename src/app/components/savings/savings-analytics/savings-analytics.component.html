@@ -1,0 +1,47 @@
+<div class="section dashboard">
+  <div class="content-padding">
+    <p class="section-title">Savings Analytics</p>
+  </div>
+</div>
+
+<div class="section-content pb-8 savings-analytics">
+  <app-quick-filter-chips [selected]="preset" (selectedChange)="onPresetChange($event)"></app-quick-filter-chips>
+
+  @if (isLoading) {
+    <app-spinner></app-spinner>
+  } @else if (analytics) {
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+      <app-stat-card label="Total Saved" [value]="analytics.totalSaved" variant="savings" />
+      <app-stat-card label="Avg Monthly" [value]="avgMonthly" variant="savings" />
+    </div>
+
+    <div class="chart-section">
+      <p class="chart-section__title">Savings Growth</p>
+      <div class="chart-section__container">
+        <app-line-chart
+          [labels]="growthLabels"
+          [datasets]="[{ label: 'Cumulative Savings', data: growthData, color: '#10B981', fill: true }]"
+        ></app-line-chart>
+      </div>
+    </div>
+
+    <div class="chart-section">
+      <p class="chart-section__title">Monthly Savings</p>
+      <div class="chart-section__container">
+        <app-bar-chart
+          [labels]="monthlyLabels"
+          [datasets]="[{ label: 'Saved', data: monthlyData, color: '#3B82F6' }]"
+        ></app-bar-chart>
+      </div>
+    </div>
+
+    @if (typeLabels.length) {
+      <div class="chart-section">
+        <p class="chart-section__title">By Category</p>
+        <div class="chart-section__container chart-section__container--doughnut">
+          <app-doughnut-chart [labels]="typeLabels" [data]="typeData"></app-doughnut-chart>
+        </div>
+      </div>
+    }
+  }
+</div>

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { ToastService } from '../../../shared/services/toast.service';
@@ -24,15 +24,12 @@ import { RadioButtonModule } from 'primeng/radiobutton';
   templateUrl: './wallet-create.component.html',
   styleUrl: './wallet-create.component.scss'
 })
-export class WalletCreateComponent {
+export class WalletCreateComponent implements OnInit {
   form!: FormGroup;
-  expenseTypes: any[] = [];
   isLoading = false;
   user: any;
   destroy$ = new Subject<void>();
   id: string = '';
-  income: any = {}; 
-
 
   constructor(
     private fb: FormBuilder,
@@ -49,24 +46,35 @@ export class WalletCreateComponent {
       name: ['', Validators.required],
       balance: ['', Validators.required],
       type: ['', Validators.required],
-    })
+    });
 
     this.authService.getCurrentUserDetail().then(user => {
       this.user = user;
-    })
+      if (this.id) {
+        this.getWalletDetail();
+      }
+    });
 
     this.route.params.subscribe(params => {
       this.id = params['id'];
-      // this.getExpenseDetail();
+      if (this.id && this.user?.id) {
+        this.getWalletDetail();
+      }
     });
   }
 
-  getExpenseDetail() {
-    // this.dataService.getExpenseDetail(this.id).then((data) => {
-    //   this.income = data?.data();
-    //   this.form.patchValue(this.income)
-    //   this.form.get('date')?.setValue(new Date(this.income.date));
-    // });
+  getWalletDetail() {
+    if (!this.id || !this.user?.id) return;
+
+    this.dataService.getUserWalletById(this.user.id, this.id).then((wallet) => {
+      if (wallet) {
+        this.form.patchValue({
+          name: wallet['name'],
+          balance: wallet.balance,
+          type: wallet['type'],
+        });
+      }
+    });
   }
 
   submitWallet() {
@@ -75,15 +83,16 @@ export class WalletCreateComponent {
       ...this.form.value,
       user: this.user,
       date: this.datepipe.transform(new Date(), 'MMM dd, yyyy'),
-    }
-    this.dataService.saveWallet(payload, this.id).then((data) => {
+    };
+
+    this.dataService.saveWallet(payload, this.id).then(() => {
       this.toastService.displayToast('success', 'Wallet', 'Wallet Saved!');
-      this.isLoading = false;
       setTimeout(() => {
-        this.router.navigate(['/wallet'])
+        this.router.navigate(['/wallet']);
       }, 1000);
     }).catch(() => {
       this.toastService.displayToast('error', 'Error', 'Something went wrong!');
+    }).finally(() => {
       this.isLoading = false;
     });
   }

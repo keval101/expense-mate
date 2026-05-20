@@ -3,6 +3,7 @@ import { Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } fro
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { SidebarService } from '../../services/sidebar.service';
+import { AuthService } from '../../services/auth.service';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
@@ -21,7 +22,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
   constructor(
     private location: Location,
     private router: Router,
-    private sidebarService: SidebarService
+    private sidebarService: SidebarService,
+    private authService: AuthService
   ) {}
 
   @HostListener('window:resize', ['$event'])
@@ -90,5 +92,10 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   goBack() {
     this.location.back();
+  }
+
+  logout() {
+    this.hideSidebar();
+    this.authService.logout();
   }
 }

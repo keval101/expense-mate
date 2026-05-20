@@ -37,7 +37,7 @@
                                 </div>
                                 <div class="overview__card">
                                     <p class="overview__card-title">Balance</p>
-                                    <p class="overview__card-value balance">{{((getMonthIncome(item?.month) - item?.totalExpense) || 0) | currency: 'INR'}}</p>
+                                    <p class="overview__card-value balance">{{(item?.netBalance ?? (getMonthIncome(item?.month) - item?.totalExpense - item?.totalSavings)) | currency: 'INR'}}</p>
                                 </div>
                                 <div class="overview__card">
                                     <p class="overview__card-title">Savings</p>

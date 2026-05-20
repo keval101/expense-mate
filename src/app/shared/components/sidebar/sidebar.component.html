@@ -15,11 +15,11 @@
     </svg>
   </label>
 
-  @if (!isDashboard) {
+  <!-- @if (!isDashboard) {
     <button class="back-btn" (click)="goBack()">
       <img src="/icons/arrow-left.svg" alt="" />
     </button>
-  }
+  } -->
 </div>
 
 <div class="sidebar" [class.show-sidebar]="isShowSidebar">
@@ -69,6 +69,26 @@
         </svg>
       </div>
       <p class="sidebar__items-item-title">Transactions</p>
+    </a>
+
+    <a class="sidebar__items-item" (click)="hideSidebar()" routerLinkActive="active" [routerLink]="['/savings']">
+      <div class="sidebar__items-item-icon">
+        <svg width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="stroke">
+          <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="#212121" stroke-width="1.5"/>
+          <path d="M12 6V12L16 14" stroke="#212121" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <p class="sidebar__items-item-title">Savings</p>
+    </a>
+
+    <a class="sidebar__items-item" (click)="hideSidebar()" routerLinkActive="active" [routerLink]="['/expense-tracker']">
+      <div class="sidebar__items-item-icon">
+        <svg width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="stroke">
+          <path d="M3 3V21H21" stroke="#212121" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M7 16L11 12L15 14L21 8" stroke="#212121" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <p class="sidebar__items-item-title">Track Expenses</p>
     </a>
 
     <a class="sidebar__items-item" (click)="hideSidebar()" routerLinkActive="active" [routerLink]="['/wallet']">
@@ -183,7 +203,7 @@
       <p class="sidebar__items-item-title">User</p>
     </a>
 
-    <a class="sidebar__items-item" (click)="hideSidebar()" [routerLink]="['/login']">
+    <a class="sidebar__items-item" (click)="logout()">
       <div class="sidebar__items-item-icon">
         <svg width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="stroke">
             <path d="M17.4399 14.62L19.9999 12.06L17.4399 9.5" stroke="#212121" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>

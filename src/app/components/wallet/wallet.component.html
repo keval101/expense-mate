@@ -1,111 +1,192 @@
-<div class="section dashboard">
-    <div class="content-padding">
-        <p class="section-title">Wallet</p>
-    </div>
-</div>
+<!-- <div class="section dashboard">
+  <div class="content-padding">
+    <p class="section-title">Wallet</p>
+  </div>
+</div> -->
 
-<div class="section-content wallet">
-
-
-    <div class="wallet__balanace">
-        <p>Availalbe Wallet: <span>{{totalIncome | currency:'INR'}}</span></p>
+<div class="p-[20px] sm:mt-0 mt-[120px] wallet-page">
+  <!-- Hero balance -->
+  <div class="wallet-hero">
+    <div class="wallet-hero__glow"></div>
+    <div class="wallet-hero__content">
+      <div class="wallet-hero__top">
+        <span class="wallet-hero__badge">
+          <i class="ri-wallet-3-line"></i>
+          Total Balance
+        </span>
+        <a class="wallet-hero__add" [routerLink]="['/wallet/add']">
+          <i class="ri-add-line"></i>
+        </a>
+      </div>
+      <p class="wallet-hero__amount">{{ totalBalance | currency: 'INR' }}</p>
+      <div class="wallet-hero__stats">
+        <div class="wallet-hero__stat">
+          <i class="ri-bank-line"></i>
+          <div>
+            <span class="label">Bank</span>
+            <span class="value">{{ bankBalance | currency: 'INR' }}</span>
+          </div>
+        </div>
+        <div class="wallet-hero__divider"></div>
+        <div class="wallet-hero__stat">
+          <i class="ri-cash-line"></i>
+          <div>
+            <span class="label">Cash</span>
+            <span class="value">{{ cashBalance | currency: 'INR' }}</span>
+          </div>
+        </div>
+        <div class="wallet-hero__divider"></div>
+        <div class="wallet-hero__stat">
+          <i class="ri-stack-line"></i>
+          <div>
+            <span class="label">Wallets</span>
+            <span class="value">{{ wallets.length }}</span>
+          </div>
+        </div>
+      </div>
     </div>
-    
-    <!-- <p class="title">Income history</p> -->
-    <div class="flex justify-between items-center mb-5">
-        <p class="title !mb-0">Wallets</p>
-        <p class="subtitle cursor-pointer" [routerLink]="['/wallet/add']">Add Wallet</p>
-    </div>
-<!-- 
-    @for(item of wallets; track item) {
-    <div class="wallet__balanace">
-        <p>{{item.balance | currency:'INR'}}</p>
-        <span>{{item.name}}</span>
-    </div>
-    } -->
+  </div>
 
-    @if(isLoading) {
-        <app-spinner></app-spinner>
+  <!-- Wallets -->
+  <section class="wallet-section">
+    <div class="wallet-section__header">
+      <div>
+        <h2 class="wallet-section__title">My Wallets</h2>
+        <p class="wallet-section__subtitle">Tap a card to manage · swipe feel</p>
+      </div>
+      <a class="wallet-section__action" [routerLink]="['/wallet/add']">
+        <i class="ri-add-circle-line"></i>
+        Add Wallet
+      </a>
+    </div>
+
+    @if (walletsLoading) {
+      <div class="wallet-cards-skeleton">
+        @for (i of [1, 2]; track i) {
+          <div class="wallet-cards-skeleton__card"></div>
+        }
+      </div>
+    } @else if (!wallets.length) {
+      <app-empty-state
+        icon="ri-wallet-line"
+        title="No wallets yet"
+        message="Create your first wallet to start tracking income and expenses."
+      >
+        <!-- <a class="add-btn mt-4 inline-flex" [routerLink]="['/wallet/add']">Create Wallet</a> -->
+      </app-empty-state>
     } @else {
-        <div class="grid mb-10 grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
-                @for(item of wallets; track item) {
-                    <div class="wallet-card savings-gradient rounded-xl p-4 text-white cursor-pointer">
-                        <div class="flex items-center space-x-2 mb-4">
-                            <div class="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center">
-                                @if(item.type === 'bank') { 
-                                    <i class="ri-bank-line ri-lg"></i>
-                                } @else {
-                                    <i class="ri-cash-fill ri-lg"></i>
-                                }
-                            </div>
-                            <span class="font-medium">{{item.name}}</span>
-                        </div>
-                        <div class="mb-2">
-                            <div class="text-2xl font-bold">{{item.balance | currency:'INR'}}</div>
-                        </div>
-                        <button class="close-btn" (click)="deleteWallet(item)"><img src="/icons/close-red.svg" alt=""></button>
-                    </div>
+      <div class="wallet-cards">
+        @for (item of wallets; track item.id; let i = $index) {
+          <article class="wallet-card" [class]="getWalletTheme(i, item.type)" [routerLink]="['/wallet/edit', item.id]">
+            <div class="wallet-card__pattern"></div>
+            <div class="wallet-card__top">
+              <div class="wallet-card__chip">
+                @if (item.type === 'bank') {
+                  <i class="ri-bank-line"></i>
+                } @else {
+                  <i class="ri-cash-fill"></i>
                 }
-        </div>
-    }
-
-    @if(!wallets.length && !isLoading) {
-        <p class="text-center mb-20">No Wallets Found!</p>
-    }
-
-    <div class="form__group">
-        <label for="type">Month</label>
-        <p-multiselect [options]="months" placeholder="Month" [(ngModel)]="selectedMonth"
-            (onSelectAllChange)="getIncomes()" (onChange)="getIncomes()" />
-    </div>
-
-    <!-- <p class="title">Income history</p> -->
-    <div class="flex justify-between items-center mb-5">
-        <p class="title !mb-0">Income history</p>
-        <p class="subtitle cursor-pointer" [routerLink]="['/incomes/add']">Add Income</p>
-    </div>
-
-
-    @for(item of incomes; track item) {
-    <div class="wallet__card cursor-pointer" [routerLink]="['/incomes/edit', item.id]">
-        <button (click)="setSelectedItem(item); $event.stopPropagation()" class="close-btn"><img src="/icons/close-red.svg" alt=""></button>
-
-        <div class="wallet__card-image">
-            <img src="/icons/money-bag.svg" alt="">
-        </div>
-        <div class="wallet__card-info">
-            <p class="name">{{item.name}}</p>
-            <p class="date">{{item.date}}</p>
-        </div>
-        <p class="wallet__card-money green">{{item.amount | currency: 'INR'}}</p>
-    </div>
-    }
-
-
-    @if(!incomes.length) {
-        <p class="text-center">No Incomes Found This Month!</p>
-    }
-</div>
-
-<!-- Main modal -->
-<div id="deleteModal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-modal md:h-full">
-    <div class="relative p-4 w-full max-w-md h-full md:h-auto">
-        <!-- Modal content -->
-        <div class="relative p-4 text-center rounded-2xl shadow sm:p-5 wallet-modal">
-            <button type="button" class="wallet-modal__close absolute top-2.5 right-2.5 bg-transparent rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" data-modal-toggle="deleteModal" (click)="onCancelModal()">
-                <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
-                <span class="sr-only">Close modal</span>
-            </button>
-            <svg class="wallet-modal__close w-11 h-11 mb-3.5 mx-auto" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
-            <p class="mb-4">Are you sure you want to delete this item?</p>
-            <div class="flex justify-center items-center space-x-4">
-                <button data-modal-toggle="deleteModal" type="button" class="wallet-modal__cancel py-2 px-3 text-sm font-medium rounded-lg border focus:z-10" (click)="onCancelModal()">
-                    No, cancel
-                </button>
-                <button (click)="onDelete()" type="submit" class="py-2 px-3 text-sm font-medium text-center text-white bg-red-600 rounded-lg hover:bg-red-700">
-                    Yes, I'm sure
-                </button>
+              </div>
+              <button class="wallet-card__delete" (click)="deleteWallet(item, $event)" aria-label="Delete wallet">
+                <i class="ri-delete-bin-6-line"></i>
+              </button>
             </div>
-        </div>
+            <div class="wallet-card__body">
+              <span class="wallet-card__type">{{ item.type === 'bank' ? 'Bank Account' : 'Cash Wallet' }}</span>
+              <p class="wallet-card__balance">{{ item.balance | currency: 'INR' }}</p>
+              <p class="wallet-card__name">{{ item.name }}</p>
+            </div>
+            <div class="wallet-card__footer">
+              <span class="wallet-card__brand">Expense Mate</span>
+            </div>
+          </article>
+        }
+      </div>
+    }
+  </section>
+
+  <!-- Income -->
+  <section class="wallet-section wallet-section--income">
+    <div class="wallet-section__header">
+      <div>
+        <h2 class="wallet-section__title">Income History</h2>
+        <p class="wallet-section__subtitle">
+          {{ monthIncomeTotal | currency: 'INR' }} received this period
+        </p>
+      </div>
+      <!-- <a class="wallet-section__action wallet-section__action--income" [routerLink]="['/incomes/add']">
+        <i class="ri-funds-line"></i>
+        Add Income
+      </a> -->
     </div>
+
+    <div class="wallet-filter">
+      <label class="wallet-filter__label">
+        <i class="ri-calendar-line"></i>
+        Filter by month
+      </label>
+      <p-multiselect
+        [options]="months"
+        placeholder="Select months"
+        [(ngModel)]="selectedMonth"
+        (onSelectAllChange)="getIncomes()"
+        (onChange)="getIncomes()"
+        styleClass="w-full app-prime-select"
+        panelStyleClass="app-prime-panel"
+        display="chip"
+      />
+    </div>
+
+    @if (isLoading) {
+      <app-loading-skeleton [count]="3"></app-loading-skeleton>
+    } @else if (!incomes.length) {
+      <app-empty-state
+        icon="ri-money-rupee-circle-line"
+        title="No income this month"
+        message="Record salary or other income to keep your wallets funded."
+      >
+        <a class="add-btn mt-4 inline-flex" [routerLink]="['/incomes/add']">Add Income</a>
+      </app-empty-state>
+    } @else {
+      <div class="income-timeline">
+        @for (item of incomes; track item.id) {
+          <div class="income-item" [routerLink]="['/incomes/edit', item.id]">
+            <div class="income-item__rail">
+              <span class="income-item__dot"></span>
+            </div>
+            <div class="income-item__card">
+              <button class="income-item__delete" (click)="setSelectedItem(item, $event)" aria-label="Delete income">
+                <i class="ri-close-line"></i>
+              </button>
+              <div class="income-item__icon">
+                <img src="/icons/money-bag.svg" alt="" />
+              </div>
+              <div class="income-item__info">
+                <p class="income-item__name">{{ item.name }}</p>
+                <p class="income-item__meta">
+                  <i class="ri-calendar-event-line"></i>
+                  {{ item.date }}
+                </p>
+                @if (item.wallet?.name) {
+                  <p class="income-item__wallet">
+                    <i class="ri-wallet-line"></i>
+                    {{ item.wallet.name }}
+                  </p>
+                }
+              </div>
+              <p class="income-item__amount">+{{ item.amount | currency: 'INR' }}</p>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </section>
 </div>
+
+@if (deleteLabel) {
+  <app-delete
+    [name]="deleteLabel"
+    (onDelete)="onConfirmDelete()"
+    (onCancel)="onCancelDelete()"
+  ></app-delete>
+}

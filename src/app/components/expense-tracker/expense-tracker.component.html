@@ -1,0 +1,89 @@
+<div class="section dashboard">
+  <div class="content-padding">
+    <p class="section-title">Track Expenses</p>
+  </div>
+</div>
+
+<div class="section-content pb-8 expense-tracker">
+  <div class="expense-tracker__filters">
+    <app-category-multi-select
+      [categories]="categories"
+      [selectedIds]="filter.categoryIds"
+      (selectedIdsChange)="onCategoryChange($event)"
+    ></app-category-multi-select>
+
+    <app-quick-filter-chips
+      [selected]="filter.preset ?? 'this_month'"
+      (selectedChange)="onPresetChange($event)"
+    ></app-quick-filter-chips>
+
+    <app-date-range-filter
+      [preset]="filter.preset ?? 'this_month'"
+      [fromDate]="filter.fromDate"
+      [toDate]="filter.toDate"
+      (rangeChange)="onDateRangeChange($event)"
+    ></app-date-range-filter>
+  </div>
+
+  @if (isLoading) {
+    <app-spinner></app-spinner>
+  } @else if (result) {
+    @if (insights.length) {
+      <div class="expense-tracker__insights">
+        @for (insight of insights; track insight.message) {
+          <app-insight-banner [insight]="insight"></app-insight-banner>
+        }
+      </div>
+    }
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+      <app-stat-card label="Total Spent" [value]="result.totalAmount" variant="expense" />
+      <app-stat-card
+        label="Avg Monthly"
+        [value]="result.averageMonthlySpending"
+        variant="expense"
+      />
+      <app-stat-card
+        label="Highest Category"
+        [value]="result.highestCategory?.total ?? 0"
+        [subtitle]="result.highestCategory?.categoryName"
+        variant="expense"
+      />
+    </div>
+
+    <p class="expense-tracker__trend">{{ trendLabel }}</p>
+
+    @if (result.totalAmount === 0) {
+      <app-empty-state
+        icon="ri-pie-chart-line"
+        title="No expenses found"
+        message="Try adjusting your filters or date range."
+      ></app-empty-state>
+    } @else {
+      <div class="chart-section">
+        <p class="chart-section__title">Monthly Trend</p>
+        <div class="chart-section__container">
+          <app-line-chart [labels]="trendLabels" [datasets]="trendDatasets"></app-line-chart>
+        </div>
+      </div>
+
+      @if (categoryLabels.length) {
+        <div class="chart-section">
+          <p class="chart-section__title">Category Distribution</p>
+          <div class="chart-section__container chart-section__container--doughnut">
+            <app-doughnut-chart [labels]="categoryLabels" [data]="categoryData"></app-doughnut-chart>
+          </div>
+        </div>
+      }
+
+      @if (comparisonLabels.length) {
+        <div class="chart-section">
+          <p class="chart-section__title">Category Comparison (Current vs Previous)</p>
+          <div class="chart-section__container">
+            <app-bar-chart [labels]="comparisonLabels" [datasets]="comparisonDatasets"></app-bar-chart>
+          </div>
+        </div>
+      }
+    }
+  }
+</div>

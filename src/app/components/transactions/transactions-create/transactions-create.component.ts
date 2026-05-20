@@ -64,6 +64,9 @@ export class TransactionsCreateComponent implements OnInit {
       this.user = user;
       this.getExpenseTypes(this.user.id);
       this.getWallets(this.user.id);
+      if (this.id) {
+        this.getExpenseDetail();
+      }
     })
 
     this.form.get('selfTransfer')?.valueChanges.subscribe(value => {
@@ -77,16 +80,18 @@ export class TransactionsCreateComponent implements OnInit {
 
     this.route.params.subscribe(params => {
       this.id = params['id'];
-      if(this.id) {
+      if (this.id && this.user?.id) {
         this.getExpenseDetail();
       }
     });
   }
 
   getExpenseDetail() {
-    this.dataService.getExpenseDetail(this.id).then((data) => {
+    if (!this.id || !this.user?.id) return;
+
+    this.dataService.getExpenseDetail(this.user.id, this.id).then((data) => {
       this.expense = data?.data();
-      this.form.patchValue(this.expense)
+      this.form.patchValue(this.expense);
       this.form.get('date')?.setValue(new Date(this.expense.date));
     });
   }
@@ -100,7 +105,7 @@ export class TransactionsCreateComponent implements OnInit {
   getExpenseTypes(userId: string) {
     this.isLoading = true;
     this.dataService.getExpenseTypes(userId).pipe(takeUntil(this.destroy$)).subscribe((data) => {
-      this.expenseTypes = data;
+      this.expenseTypes = data.filter((t: any) => t.type !== 'savings');
       this.isLoading = false;
     });
   }
@@ -113,34 +118,25 @@ export class TransactionsCreateComponent implements OnInit {
       date: this.datepipe.transform(this.form.value.date, 'MMM dd, yyyy'),
       month: this.datepipe.transform(this.form.value.date, 'MMM, yyyy'),
       time: this.expense?.time ? this.expense?.time : new Date().getTime()
-    }
+    };
 
-    // update wallet balance
-    const wallet = payload.wallet;
-    if(wallet) {
-      const selectedWallet = this.wallets.find(w => w.id === payload.wallet?.id);
-      selectedWallet.balance = selectedWallet.balance - payload.amount;
-      await this.dataService.updateWallet(selectedWallet.id, selectedWallet.user.id, selectedWallet.balance);
-    }
-
-    if(payload.selfTransfer) {
-      const selfTransferWallet = this.wallets.find(wallet => wallet.id === payload.selfTransferWallet.id);
-      if(selfTransferWallet) {
-        selfTransferWallet.balance = selfTransferWallet.balance + payload.amount;
-        await this.dataService.updateWallet(selfTransferWallet.id, selfTransferWallet.user.id, selfTransferWallet.balance);
+    try {
+      if (this.id && this.expense) {
+        await this.dataService.reverseExpenseWalletChanges(this.user.id, this.expense);
       }
-    }
 
-    this.dataService.saveExpense(payload, this.id).then((data) => {
+      await this.dataService.applyExpenseWalletChanges(this.user.id, payload);
+      await this.dataService.saveExpense(payload, this.id);
+
       this.toastService.displayToast('success', 'Expense', 'Expense Saved!');
-      this.isLoading = false;
       setTimeout(() => {
-        this.router.navigate(['/expenses'])
+        this.router.navigate(['/expenses']);
       }, 1000);
-    }).catch(() => {
+    } catch {
       this.toastService.displayToast('error', 'Error', 'Something went wrong!');
+    } finally {
       this.isLoading = false;
-    });
+    }
   }
 
   ngOnDestroy(): void {

@@ -1,0 +1,70 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function validSavingsData() {
+      return request.resource.data.keys().hasAll([
+        'title', 'amount', 'walletId', 'dateTs', 'monthKey', 'type', 'userId'
+      ])
+      && request.resource.data.amount is number
+      && request.resource.data.amount > 0
+      && request.resource.data.type in ['emergency', 'investment', 'goal']
+      && request.resource.data.userId == request.auth.uid;
+    }
+
+    match /users/{userId} {
+      allow read, write: if isOwner(userId);
+
+      match /wallets/{walletId} {
+        allow read, write: if isOwner(userId);
+      }
+
+      match /expenses/{expenseId} {
+        allow read, write: if isOwner(userId);
+      }
+
+      match /incomes/{incomeId} {
+        allow read, write: if isOwner(userId);
+      }
+
+      match /savings/{savingsId} {
+        allow read: if isOwner(userId);
+        allow create: if isOwner(userId) && validSavingsData();
+        allow update: if isOwner(userId) && validSavingsData();
+        allow delete: if isOwner(userId);
+      }
+    }
+
+    match /types/{typeId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated()
+        && request.resource.data.user.id == request.auth.uid
+        && request.resource.data.delete == true;
+      allow update, delete: if isAuthenticated()
+        && resource.data.user.id == request.auth.uid;
+    }
+
+    match /expenses/{id} {
+      allow read: if isAuthenticated() && resource.data.user.id == request.auth.uid;
+      allow write: if isAuthenticated() && request.resource.data.user.id == request.auth.uid;
+    }
+
+    match /incomes/{id} {
+      allow read: if isAuthenticated() && resource.data.user.id == request.auth.uid;
+      allow write: if isAuthenticated() && request.resource.data.user.id == request.auth.uid;
+    }
+
+    match /wallets/{id} {
+      allow read: if isAuthenticated();
+      allow write: if false;
+    }
+  }
+}

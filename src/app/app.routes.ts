@@ -12,6 +12,10 @@ import { IncomeCreateComponent } from './components/wallet/income-create/income-
 import { ReportComponent } from './components/report/report.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { WalletCreateComponent } from './components/wallet/wallet-create/wallet-create.component';
+import { SavingsListComponent } from './components/savings/savings-list/savings-list.component';
+import { SavingsFormComponent } from './components/savings/savings-form/savings-form.component';
+import { SavingsAnalyticsComponent } from './components/savings/savings-analytics/savings-analytics.component';
+import { ExpenseTrackerComponent } from './components/expense-tracker/expense-tracker.component';
 
 export const routes: Routes = [
     {
@@ -85,6 +89,31 @@ export const routes: Routes = [
     {
         path: 'reports',
         component: ReportComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'savings',
+        component: SavingsListComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'savings/add',
+        component: SavingsFormComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'savings/edit/:id',
+        component: SavingsFormComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'savings/analytics',
+        component: SavingsAnalyticsComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'expense-tracker',
+        component: ExpenseTrackerComponent,
         canActivate: [AuthGuard]
     },
     {
